@@ -1,0 +1,28 @@
+.dropzone_container {
+  margin-top: 30px;
+}
+.dropzone_inner {
+  border: 1px solid black !important;
+  padding: 40px 0px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.create_list {
+  width: 100%;
+  /* background-color: var(--grey); */
+  box-shadow: none;
+}
+
+.icon {
+  padding: 5px;
+  font-size: 25px;
+  align-self: center;
+  justify-self: center;
+  cursor: pointer;
+}

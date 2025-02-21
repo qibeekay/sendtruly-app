@@ -1,0 +1,49 @@
+.nav_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: white; */
+  width: 100%;
+  position: fixed;
+}
+.nav_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  padding: 20px 0px;
+}
+.nav_middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+}
+.nav_middle li {
+  margin: 0px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: var(--poppins);
+}
+.nav_middle li a {
+  text-decoration: none;
+  color: black;
+}
+.nav_right a {
+  text-decoration: none;
+}
+.nav_right button {
+  border: none;
+  background-color: transparent;
+  padding: 10px 25px;
+  margin: 0px 10px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.nav_right a:last-of-type button {
+  background-color: var(--brandcolor);
+  color: var(--white);
+}

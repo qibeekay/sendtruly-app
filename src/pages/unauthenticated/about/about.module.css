@@ -1,0 +1,40 @@
+.about_container {
+  background-color: #dfefff;
+  min-height: 100vh;
+  padding: 150px;
+}
+.about_container h1 {
+  margin-top: 30px;
+  font-size: 40px;
+}
+.about_container p {
+  color: #000;
+  font-family: var(--poppins);
+  font-size: 18px;
+  font-weight: 300;
+  margin-top: 30px;
+}
+.about_container h2 {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-size: 25px;
+  text-align: center;
+}
+.choose_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px 50px;
+}
+.choose_inner {
+  width: 400px;
+}
+.choose_inner h3 {
+  margin-top: 30px;
+  color: var(--brandcolor);
+}
+.choose_inner p {
+  margin-top: 10px;
+  font-size: 16px;
+}
