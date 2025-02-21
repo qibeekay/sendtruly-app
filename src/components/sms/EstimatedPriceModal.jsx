@@ -15,11 +15,11 @@ const EstimatedPriceModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     fetchEstimate();
-  //   }
-  // }, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+      fetchEstimate();
+    }
+  }, [isOpen]);
 
   console.log("sms", smsData);
   // function to upload contacts
