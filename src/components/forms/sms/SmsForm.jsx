@@ -324,7 +324,7 @@ function SmsForm({ form, changeState, setChangeState, setZero_contacts }) {
     }
 
     try {
-      const res = await AxiosInstance.post(
+      const res = await AxiosInstance.get(
         `${import.meta.env.VITE_APP_BASE_URL}/messages/get-drafts-messages`,
         {
           usertoken: user_data?.user?.usertoken || "",

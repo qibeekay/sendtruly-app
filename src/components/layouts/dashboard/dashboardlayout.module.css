@@ -74,13 +74,13 @@
   /* border-right: 2px solid var(--brandcolor); */
   color: var(--brandcolor);
 }
-.dashboard_main {
-  margin-left: 250px;
-  padding: 20px;
-  background-color: #f7f5ec;
+/* .dashboard_main { */
+/* margin-left: 250px; */
+/* padding: 20px; */
+/* background-color: ;
   width: 100%;
   min-height: 100vh;
-}
+}*/
 .logout_button {
   margin-top: 70% !important;
 }

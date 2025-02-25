@@ -21,7 +21,7 @@ const EstimatedPriceModal = ({
     }
   }, [isOpen]);
 
-  console.log("sms", smsData);
+  // console.log("sms", smsData);
   // function to upload contacts
   const sendBulkSms = async (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const EstimatedPriceModal = ({
       sms_cost: estimate?.estimated_price,
     });
 
-    console.log(result);
+    console.log(result.success);
     toast({
       title: result.success ? "Success!" : "Error occurred",
       description: result.message,

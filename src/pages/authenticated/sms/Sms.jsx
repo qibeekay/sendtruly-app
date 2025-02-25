@@ -21,6 +21,8 @@ import {
 import SmsForm from "../../../components/forms/sms/SmsForm";
 import { useNavigate } from "react-router-dom";
 import ComposeSms from "../../../components/sms/ComposeSms";
+import SentMessageTab from "../../../components/sms/SentMessageTab";
+import GetScheduledMessages from "../../../components/sms/GetScheduledMessages";
 
 function Sms() {
   const navigate = useNavigate();
@@ -129,20 +131,22 @@ function Sms() {
             </TabPanel>
             <TabPanel>
               <div className={styles.tab_format_container}>
-                <SmsForm form="personal" changeState={changeState} />
+                {/* <SmsForm form="personal" changeState={changeState} /> */}
               </div>
             </TabPanel>
             <TabPanel>
-              <SmsForm form="scheduled" changeState={changeState} />
+              {/* <SmsForm form="scheduled" changeState={changeState} /> */}
+              <GetScheduledMessages />
             </TabPanel>
             <TabPanel>
-              <SmsForm form="sent" changeState={changeState} />
+              {/* <SmsForm form="sent" changeState={changeState} /> */}
+              <SentMessageTab />
             </TabPanel>
             <TabPanel>
-              <SmsForm
+              {/* <SmsForm
                 changeState={changeState}
                 setChangeState={setChangeState}
-              />
+              /> */}
             </TabPanel>
           </TabPanels>
         </Tabs>

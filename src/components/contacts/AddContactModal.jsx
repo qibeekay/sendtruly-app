@@ -262,12 +262,17 @@ const AddContactModal = ({ isOpen, onClose, list_token }) => {
                 onClick={handleAddContact}
                 className="border border-pinks rounded-[10px] text-pinks px-6 py-4 bg-white hover:bg-pinks/10 duration-300 ease-in-out"
               >
-                Add Contacts
+                {contactsList.length === 0
+                  ? "Add Contacts"
+                  : "Add More Contacts"}
               </button>
 
               <button
                 onClick={createContacts}
-                className="border border-pinks rounded-[10px] text-white px-6 py-4 bg-pinks hover:bg-pinks/80 duration-300 ease-in-out"
+                disabled={contactsList.length === 0 || isLoading}
+                className={`border border-pinks rounded-[10px] text-white px-6 py-4 bg-pinks hover:bg-pinks/80 duration-300 ease-in-out ${
+                  contactsList.length === 0 ? "hidden" : "block"
+                }`}
               >
                 {isLoading ? "Loading..." : "Upload Contacts"}
               </button>

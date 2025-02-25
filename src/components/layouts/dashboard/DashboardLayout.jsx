@@ -61,7 +61,7 @@ function DashboardLayout({
     }
 
     try {
-      const res = await AxiosInstance.post(
+      const res = await AxiosInstance.get(
         `${import.meta.env.VITE_APP_BASE_URL}/user-dashboard-info`,
         {
           usertoken,
@@ -192,43 +192,45 @@ function DashboardLayout({
           </li>
         </ul>
       </div>
-      <div className={styles.dashboard_main}>
-        <div className={styles.top_nav_container}>
-          <div className={styles.top_nav_left}>
-            {" "}
-            <HiMenuAlt2 className={styles.icon} onClick={toggleNav} />{" "}
-            {pageName}
-          </div>
-          <div className={styles.top_nav_right}>
-            <div className={styles.top_name_flex}>
-              <h4>
-                {userData?.user?.fname} {userData?.user?.lname}
-              </h4>
-              <span>Member since '24</span>
+      <div className="w-full flex items-center justify-end">
+        <div className="w-full lg:w-[calc(100%-250px)] bg-[#f7f5ec] min-h-screen">
+          <div className={`${styles.top_nav_container} p-5`}>
+            <div className={styles.top_nav_left}>
+              {" "}
+              <HiMenuAlt2 className={styles.icon} onClick={toggleNav} />{" "}
+              {pageName}
             </div>
-            <div className={styles.top_name_logo}>
-              {capitalizeFirstLetter(userData?.user?.fname)}
-              {capitalizeFirstLetter(userData?.user?.lname)}
+            <div className={styles.top_nav_right}>
+              <div className={styles.top_name_flex}>
+                <h4>
+                  {userData?.user?.fname} {userData?.user?.lname}
+                </h4>
+                <span>Member since '24</span>
+              </div>
+              <div className={styles.top_name_logo}>
+                {capitalizeFirstLetter(userData?.user?.fname)}
+                {capitalizeFirstLetter(userData?.user?.lname)}
+              </div>
             </div>
           </div>
-        </div>
-        <div className={styles.top_nav_children}>
-          <PageLoader isLoading={isLoading} />
-          {!userData.kyc_status && (
-            <Alert status="warning" mt={"20px"}>
-              <AlertIcon />
-              <Link
-                to={{
-                  pathname: `/kyc/${userData?.user?.usertoken}`,
-                  state: { data: { state: true } },
-                }}
-              >
-                {" "}
-                Click to complete kyc and enjoy full access to our services{" "}
-              </Link>
-            </Alert>
-          )}
-          {children}
+          <div className={`${styles.top_nav_children} px-5`}>
+            <PageLoader isLoading={isLoading} />
+            {!userData.kyc_status && (
+              <Alert status="warning" mt={"20px"}>
+                <AlertIcon />
+                <Link
+                  to={{
+                    pathname: `/kyc/${userData?.user?.usertoken}`,
+                    state: { data: { state: true } },
+                  }}
+                >
+                  {" "}
+                  Click to complete kyc and enjoy full access to our services{" "}
+                </Link>
+              </Alert>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     </div>

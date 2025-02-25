@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetAllList, GetContactsByToken } from "../../api/contact";
 import { Select, useToast } from "@chakra-ui/react";
-import { GetEstimate } from "../../api/sms";
+import { GetDeliveryReport, GetEstimate } from "../../api/sms";
 import EstimatedPriceModal from "./EstimatedPriceModal";
 
 const ComposeSms = () => {
@@ -27,7 +27,7 @@ const ComposeSms = () => {
     is_drafted: false,
     delivery_route: "",
     scheduled: false,
-    scheduled_data: {},
+    scheduled_data: { schedule_type: "Daily", scheduled_number: "1" },
     sms_cost: 0,
   });
 
@@ -126,6 +126,20 @@ const ComposeSms = () => {
     });
     setEstimate(result.data);
     setLoading(false);
+  };
+
+  // function to schedule input changes
+  const scheduleInputChange = (event) => {
+    const { name, value } = event.target;
+    const oldData = bulkSmsData.scheduled_data;
+    // Update the specific field in the formData state
+    setBulkSmsData((prevFormData) => ({
+      ...prevFormData,
+      scheduled_data: {
+        ...oldData,
+        [name]: value,
+      },
+    }));
   };
 
   // Update group contacts when cache or selection changes

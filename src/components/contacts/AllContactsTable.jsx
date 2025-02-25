@@ -4,7 +4,12 @@ import {
   GetAllList,
   GetContactsByToken,
 } from "../../api/contact";
-import { HiOutlineEye, HiOutlineFolderOpen } from "react-icons/hi";
+import {
+  HiChevronLeft,
+  HiChevronRight,
+  HiOutlineEye,
+  HiOutlineFolderOpen,
+} from "react-icons/hi";
 import { Spinner, useToast } from "@chakra-ui/react";
 import { MdArrowDropDown, MdPersonAddAlt } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -17,6 +22,10 @@ const AllContactsTable = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const toast = useToast();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5); // Number of items per page
 
   // function to get all list
   useEffect(() => {
@@ -42,6 +51,7 @@ const AllContactsTable = () => {
     if (result.success) {
       setContacts(result.data.contacts);
     }
+    setCurrentPage(1);
     setIsLoading(false);
   };
 
@@ -55,12 +65,20 @@ const AllContactsTable = () => {
     group.list_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Get current items for pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentRanges = contacts.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="bg-white min-h-screen w-full llg:w-[80%] rounded-[10px]">
       <div className="p-[4rem]">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-[24px] pb-2">Contact contacts</h1>
+            <h1 className="font-semibold text-[24px] pb-2">Contacts</h1>
             <p>An overview of your contact contacts</p>
           </div>
 
@@ -148,15 +166,9 @@ const AllContactsTable = () => {
                       </th>
                       <th
                         scope="col"
-                        className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
-                      >
-                        EMAIL
-                      </th>
-                      <th
-                        scope="col"
                         className="p-5 text-right text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"
                       >
-                        Actions
+                        EMAIL
                       </th>
                     </tr>
                   </thead>
@@ -182,7 +194,7 @@ const AllContactsTable = () => {
                         </td>
                       </tr>
                     ) : (
-                      contacts?.map((contact, index) => (
+                      currentRanges?.map((contact, index) => (
                         <tr
                           key={index}
                           className="bg-white transition-all duration-500 hover:bg-gray-50"
@@ -196,24 +208,8 @@ const AllContactsTable = () => {
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {contact?.number}
                           </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 flex items-end justify-end">
                             {contact?.email}
-                          </td>
-                          <td className="p-5">
-                            <div className="flex items-center justify-end gap-1">
-                              <button
-                                // onClick={() => openModal(contact?.list_token)}
-                                className="p-2 rounded-full group transition-all duration-500 flex item-center"
-                              >
-                                <MdPersonAddAlt size={25} />
-                              </button>
-                              <button className="p-2 rounded-full group transition-all duration-500 flex item-center">
-                                <HiOutlineEye size={25} />
-                              </button>
-                              <button className="p-2 rounded-full group transition-all duration-500 flex item-center">
-                                <RiDeleteBin6Line size={25} color="red" />
-                              </button>
-                            </div>
                           </td>
                         </tr>
                       ))
@@ -222,89 +218,52 @@ const AllContactsTable = () => {
                 </table>
               </div>
 
-              {/* pagination */}
-              <nav
-                className="flex items-center justify-center py-4"
-                aria-label="Table navigation"
-              >
+              {/* Pagination Controls */}
+              <nav className="flex items-center justify-center py-4">
                 <ul className="flex items-center justify-center text-sm h-auto gap-12">
                   <li>
-                    <a
-                      href="javascript:;"
-                      className="flex items-center justify-center gap-2 px-3 h-8 ml-0 text-gray-500 bg-white font-medium text-base leading-7 hover:text-gray-700"
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center justify-center gap-2 px-3 h-8 ml-0 text-gray-500 bg-white font-medium text-base leading-7 hover:text-gray-700 disabled:opacity-50"
                     >
-                      <svg
-                        width="21"
-                        height="20"
-                        viewBox="0 0 21 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13.0002 14.9999L8 9.99967L13.0032 4.99652"
-                          stroke="black"
-                          stroke-width="1.6"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        ></path>
-                      </svg>
-                    </a>
+                      <HiChevronLeft />
+                    </button>
                   </li>
                   <li>
                     <ul className="flex items-center justify-center gap-4">
-                      <li>
-                        <a
-                          href="javascript:;"
-                          className="font-normal text-base leading-7 text-gray-500 py-2.5 px-4 rounded-full bg-white transition-all duration-500 hover:bg-indigo-600 hover:text-white"
-                        >
-                          1
-                        </a>
-                      </li>
-
-                      <li>
-                        <a
-                          href="javascript:;"
-                          className="font-normal text-base leading-7 text-gray-500 py-2.5 px-4 rounded-full"
-                        >
-                          <svg
-                            width="21"
-                            height="20"
-                            viewBox="0 0 21 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.52754 10.001H5.47754M10.5412 10.001H10.4912M15.5549 10.001H15.5049"
-                              stroke="black"
-                              stroke-width="2.5"
-                              stroke-linecap="round"
-                            ></path>
-                          </svg>
-                        </a>
-                      </li>
+                      {Array.from(
+                        {
+                          length: Math.ceil(contacts.length / itemsPerPage),
+                        },
+                        (_, i) => (
+                          <li key={i + 1} className="">
+                            <button
+                              onClick={() => paginate(i + 1)}
+                              className={`font-normal text-base leading-7 w-[2rem] aspect-square rounded-full ${
+                                currentPage === i + 1
+                                  ? "bg-indigo-600 text-white"
+                                  : "bg-white text-gray-500"
+                              } transition-all duration-500 hover:bg-indigo-600 hover:text-white`}
+                            >
+                              {i + 1}
+                            </button>
+                          </li>
+                        )
+                      )}
                     </ul>
                   </li>
                   <li>
-                    <a
-                      href="javascript:;"
-                      className="flex items-center justify-center gap-2 px-3 h-8 ml-0 text-gray-500 bg-white font-medium text-base leading-7 hover:text-gray-700"
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={
+                        currentPage ===
+                        Math.ceil(contacts.length / itemsPerPage)
+                      }
+                      className="flex items-center justify-center gap-2 px-3 h-8 ml-0 text-gray-500 bg-white font-medium text-base leading-7 hover:text-gray-700 disabled:opacity-50"
                     >
-                      <svg
-                        width="21"
-                        height="20"
-                        viewBox="0 0 21 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M8.00295 4.99646L13.0032 9.99666L8 14.9998"
-                          stroke="black"
-                          stroke-width="1.6"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        ></path>
-                      </svg>
-                    </a>
+                      <HiChevronRight />
+                    </button>
                   </li>
                 </ul>
               </nav>

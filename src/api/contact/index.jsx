@@ -110,7 +110,7 @@ export const GetAllContacts = async () => {
     if (!response.data.success) {
       return {
         success: false,
-        message: response.data.message || "Failed to fecth Contacts",
+        message: response.data.message || "Failed to fetch Contacts",
       };
     }
 
@@ -150,6 +150,73 @@ export const GetContactsByToken = async (userdata) => {
     return {
       success: true,
       message: response.data.message || "Contacts created successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
+// upload bulkcontact to list
+export const UploadBulkContact = async (userdata) => {
+  try {
+    const response = await axios.post(
+      `${URL}/contact/bulk-upload-contacts`,
+      userdata,
+      {
+        headers: { Authorization: `Bearer ${bearer}` },
+      }
+    );
+
+    if (!response.data.status) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to create contacts",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Contacts created successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
+export const DeleteGroup = async (userdata) => {
+  try {
+    const response = await axios.post(
+      `${URL}/contact/delete-user-list`,
+      userdata,
+      {
+        headers: { Authorization: `Bearer ${bearer}` },
+      }
+    );
+
+    console.log(response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to delete group",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Group delete successfully",
       data: response.data.data,
     };
   } catch (error) {
