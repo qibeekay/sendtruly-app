@@ -18,6 +18,10 @@ import Docs from "./pages/authenticated/docs/Docs";
 import Settings from "./pages/authenticated/settings/Settings";
 import Kyc from "./pages/authenticated/kyc/Kyc";
 import { RefreshProvider } from "./utility/RefreshContext";
+import Enterprise from "./pages/authenticated/enterprise/Enterprise";
+import { TabProvider } from "./utility/TabContext";
+import Compose from "./pages/authenticated/enterprise-compose/Compose";
+import ReviewsPage from "./pages/unauthenticated/reviews/ReviewsPage";
 
 function App() {
   return (
@@ -29,6 +33,7 @@ function App() {
       <Route element={<Verify />} path="/verify/:email" />
       <Route element={<Register />} path="/register" />
       <Route element={<About />} path="/about" />
+      <Route element={<ReviewsPage />} path="/reviews/:reviewId" />
 
       {/* Authenticated ROutes  */}
       <Route path="/dashboard" element={<Dashboard />} />
@@ -45,6 +50,22 @@ function App() {
       <Route path="/dashboard/history" element={<History />} />
       <Route path="/dashboard/api-doc" element={<Docs />} />
       <Route path="/dashboard/settings" element={<Settings />} />
+      <Route
+        path="/dashboard/enterprise/dashboard"
+        element={
+          <TabProvider>
+            <Enterprise />
+          </TabProvider>
+        }
+      />
+      <Route
+        path="/dashboard/enterprise/compose"
+        element={
+          <TabProvider>
+            <Compose />
+          </TabProvider>
+        }
+      />
       {/* Verifications  */}
       <Route path="/kyc/:usertoken" element={<Kyc />} />
     </Routes>

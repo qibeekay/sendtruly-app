@@ -70,7 +70,7 @@
   color: var(--brandcolor);
 }
 .dashboard_navigation li a.active {
-  border-left: 4px solid var(--brandcolor);
+  /* border-left: 4px solid var(--brandcolor); */
   /* border-right: 2px solid var(--brandcolor); */
   color: var(--brandcolor);
 }

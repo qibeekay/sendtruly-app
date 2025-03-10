@@ -21,8 +21,7 @@ const EstimatedPriceModal = ({
     }
   }, [isOpen]);
 
-  // console.log("sms", smsData);
-  // function to upload contacts
+  // function to send sms
   const sendBulkSms = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,12 +39,6 @@ const EstimatedPriceModal = ({
       duration: 5000,
       isClosable: true,
     });
-
-    // if (result.success) {
-    //   onClose();
-    //   setContactsList([]);
-    // }
-
     setIsLoading(false);
   };
   return (

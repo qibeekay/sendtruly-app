@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Alert, AlertIcon, useToast } from "@chakra-ui/react";
 import { AxiosInstance } from "../../../config";
 import PageLoader from "../../loaders/PageLoader";
+import { GetDashboardInfo } from "../../../api/dashboard";
 
 function DashboardLayout({
   pageName,
@@ -26,14 +27,11 @@ function DashboardLayout({
   payment_step,
   children,
 }) {
-  const toast = useToast();
   const [navState, setNavState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const currentPath = window.location.href;
   const userData = JSON.parse(localStorage.getItem("data_user_main"));
-  const dash_data = JSON.parse(localStorage.getItem("dash_data"));
 
-  const usertoken = userData?.user?.user?.usertoken;
   const toggleNav = () => {
     setNavState(!navState);
   };
@@ -50,55 +48,11 @@ function DashboardLayout({
     return firstLetter;
   }
 
-  if (!userData) {
+  if (!userData.token) {
     return <Navigate to="/login" />;
   }
 
-  // get all lists list api
-  const getUserData = async () => {
-    if (!dash_data) {
-      setIsLoading(true);
-    }
-
-    try {
-      const res = await AxiosInstance.get(
-        `${import.meta.env.VITE_APP_BASE_URL}/user-dashboard-info`,
-        {
-          usertoken,
-        }
-      );
-      setIsLoading(false);
-      if (res.data.success) {
-        if (setDash_data) {
-          setDash_data(res.data.data);
-          if (parseInt(res.data.data.total_contacts.data.contact_count) <= 0) {
-            setZero_contacts(true);
-          }
-        }
-        localStorage.setItem("dash_data", JSON.stringify(res.data.data));
-      } else {
-        toast({
-          title: res.data.message,
-          status: "warning",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast({
-        title: error.response?.data.message || error.message,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
-
-  useEffect(() => {
-    getUserData();
-  }, [payment_step, pageName]);
-
+  // [payment_step, pageName];
   return (
     <div className={styles.dashboard_container}>
       <div
@@ -144,6 +98,45 @@ function DashboardLayout({
               <IoMdChatbubbles className={styles.icon} />
               Chats
             </Link>
+          </li>
+          <li>
+            <Link
+              to="/dashboard/enterprise/dashboard"
+              className={
+                currentPath.includes("enterprise") ? styles.active : ""
+              }
+            >
+              <IoMdChatbubbles className={styles.icon} />
+              Enterprise
+            </Link>
+            <div className=" pl-7">
+              <div>
+                <Link
+                  to="/dashboard/enterprise/dashboard"
+                  className={
+                    currentPath.includes("enterprise/dashboard")
+                      ? styles.active
+                      : ""
+                  }
+                >
+                  <IoMdChatbubbles className={styles.icon} />
+                  Dashboard
+                </Link>
+              </div>
+              <div>
+                <Link
+                  to="/dashboard/enterprise/compose"
+                  className={
+                    currentPath.includes("enterprise/compose")
+                      ? styles.active
+                      : ""
+                  }
+                >
+                  <IoMdChatbubbles className={styles.icon} />
+                  Compose
+                </Link>
+              </div>
+            </div>
           </li>
           <li>
             <Link

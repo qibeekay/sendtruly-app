@@ -50,52 +50,9 @@ import PageLoader from "../../../components/loaders/PageLoader";
 import { Link, useNavigate } from "react-router-dom";
 import PaystackButton from "../../../payments/Paystack";
 import { AxiosInstance } from "../../../config";
+import { GetDashboardInfo } from "../../../api/dashboard";
 
 function Dashboard() {
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
   const user_data = JSON.parse(localStorage.getItem("data_user_main"));
   const navigate = useNavigate();
   const toast = useToast();
@@ -106,13 +63,25 @@ function Dashboard() {
   const [payment_step, setPayment_step] = useState(0);
   const [amount, setAmount] = useState("");
   const [zero_contacts, setZero_contacts] = useState(false);
-  const [trxHistory, setTrxHistory] = useState(
-    JSON.parse(localStorage.getItem("user_trx")) || []
-  );
+  const [trxHistory, setTrxHistory] = useState([]);
+  const [info, setInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const cancelRef = React.useRef();
 
   const modalWidth = useBreakpointValue({ base: "90%", md: "50%" });
+
+  // get dashboard info
+  // get all lists list api
+  const getUserData = async () => {
+    setIsLoading(true);
+    const result = await GetDashboardInfo();
+    setInfo(result.data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   // handle account funding
   const handleAccountFund = async (payload) => {
@@ -175,9 +144,9 @@ function Dashboard() {
       );
       setIsLoading(false);
 
+      console.log("resss", res.data);
       if (res.data.success) {
         setTrxHistory(res.data.data);
-        localStorage.setItem("user_trx", JSON.stringify(res.data.data));
       } else {
         toast({
           title: res.data.message,
@@ -210,11 +179,6 @@ function Dashboard() {
   }
 
   useEffect(() => {
-    if (dash_data) {
-      if (parseInt(dash_data.total_contacts.data.contact_count) <= 0) {
-        setZero_contacts(true);
-      }
-    }
     getTransactions();
   }, []);
 
@@ -230,16 +194,12 @@ function Dashboard() {
         <div className={styles.dashboard_item}>
           <h4>Account Balance</h4>
           <h1>
-            {dash_data
-              ? parseInt(
-                  dash_data.account_balance.account_balance
-                ).toLocaleString("en-US", {
-                  style: "decimal",
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              : ""}
             <FaNairaSign className={styles.icon} />
+            {parseInt(info.account_balance).toLocaleString("en-US", {
+              style: "decimal",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </h1>
           <Text
             style={{
@@ -275,13 +235,11 @@ function Dashboard() {
         </div>
         <div className={styles.dashboard_item}>
           <h4>Total Contacts</h4>
-          <h1>
-            {dash_data ? dash_data.total_contacts.data.contact_count : ""}
-          </h1>
+          <h1>{info?.totalContactCount}</h1>
         </div>
         <div className={styles.dashboard_item}>
           <h4>Plan Information</h4>
-          <h1>{dash_data ? dash_data.plan_info : ""}</h1>
+          <h1>{info?.plan_type}</h1>
           <Text
             style={{
               width: "100%",
@@ -304,17 +262,7 @@ function Dashboard() {
                 padding: "4px",
               }}
             >
-              {dash_data ? (
-                <>
-                  {parseInt(dash_data?.sms_count) <= 0
-                    ? ""
-                    : `${parseInt(
-                        dash_data.sms_count.toLocaleString("en-US")
-                      )} sms remaining`}
-                </>
-              ) : (
-                ""
-              )}
+              {<>{`${parseInt(info?.totalSmsCount)} sms remaining`}</>}
             </span>
             {/* </PaystackButton> */}
           </Text>
@@ -333,25 +281,31 @@ function Dashboard() {
               </Tr>
             </Thead>
             <Tbody>
-              {getLast10Objects(trxHistory).map((item, i) => {
-                return (
-                  <Tr key={i}>
-                    <Td pl="0px">{item.paystack_trax_id}</Td>
-                    <Td>{item.amount_th}</Td>
-                    <Td>
-                      <Badge
-                        variant="outline"
-                        colorScheme={
-                          item.credit_type === "credit" ? "green" : "red"
-                        }
-                      >
-                        {item.credit_type === "credit" ? "Credit" : "Debit"}
-                      </Badge>
-                    </Td>
-                    <Td>{item.tranx_date}</Td>
-                  </Tr>
-                );
-              })}
+              {trxHistory.length === 0 ? (
+                <div className="w-full items-center justify-center">
+                  No transaction available at the moment
+                </div>
+              ) : (
+                getLast10Objects(trxHistory).map((item, i) => {
+                  return (
+                    <Tr key={i}>
+                      <Td pl="0px">{item?.paystack_trax_id}</Td>
+                      <Td>{item?.amount_th}</Td>
+                      <Td>
+                        <Badge
+                          variant="outline"
+                          colorScheme={
+                            item?.credit_type === "credit" ? "green" : "red"
+                          }
+                        >
+                          {item?.credit_type === "credit" ? "Credit" : "Debit"}
+                        </Badge>
+                      </Td>
+                      <Td>{item?.tranx_date}</Td>
+                    </Tr>
+                  );
+                })
+              )}
             </Tbody>
           </Table>
         </TableContainer>

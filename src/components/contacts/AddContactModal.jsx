@@ -58,8 +58,6 @@ const AddContactModal = ({ isOpen, onClose, list_token }) => {
     );
   };
 
-  console.log(list_token);
-
   // function handles adding contacts to an array before being uploaded
   const handleAddContact = (e) => {
     e.preventDefault();
