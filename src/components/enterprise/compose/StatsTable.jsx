@@ -1,48 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { GetReviews } from "../../../api/reviews";
 import { Spinner } from "@chakra-ui/react";
+import React, { useState } from "react";
 import {
   HiChevronLeft,
   HiChevronRight,
   HiOutlineFolderOpen,
 } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
 
-const ReviewTable = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [reviews, setReviews] = useState([]);
-  const navigate = useNavigate();
-
+const StatsTable = ({ details = [], isLoading }) => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items per page
+  const [itemsPerPage] = useState(5);
 
-  // Fetch all sms delivery reports on mount
-  useEffect(() => {
-    const getReview = async () => {
-      setIsLoading(true);
-      const result = await GetReviews();
-      setReviews(result.data.data);
-      setIsLoading(false);
-    };
-    getReview();
-  }, []);
+  console.log(details);
 
   // Get current items for pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentRanges = reviews.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Navigate to view stats and pass review data
-  const viewStats = (review) => {
-    navigate(`/dashboard/enterprise/${review.token}`, {
-      state: { review }, // Pass the entire review object as state
-    });
-  };
+  const currentRanges = details.slice(indexOfFirstItem, indexOfLastItem);
 
   // Pagination function
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   return (
     <div>
       <div className="flex flex-col mt-10 w-full">
@@ -52,15 +29,17 @@ const ReviewTable = () => {
               <thead>
                 <tr className="bg-gray-50">
                   <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                    Sender ID
+                    Phone number
                   </th>
                   <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                    Message
+                    Comment
                   </th>
                   <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                    Date
+                    Ratings
                   </th>
-                  <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"></th>
+                  <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
+                    Time
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
@@ -72,7 +51,7 @@ const ReviewTable = () => {
                       </div>
                     </td>
                   </tr>
-                ) : reviews.length === 0 ? (
+                ) : details.length === 0 ? (
                   <tr>
                     <td colSpan="3" className="p-5 text-center text-gray-500">
                       <div className="py-8 flex flex-col items-center gap-2">
@@ -82,29 +61,22 @@ const ReviewTable = () => {
                     </td>
                   </tr>
                 ) : (
-                  currentRanges.map((review, index) => (
+                  currentRanges.map((stats, index) => (
                     <tr
                       key={index}
                       className="transition-all duration-500 bg-white"
                     >
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {review?.sender_id}
+                        {stats?.number}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {review?.message}
+                        {stats?.comment}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {review?.sent_at}
+                        {stats?.review_ratings}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            onClick={() => viewStats(review)} // Pass the review object
-                            className={`py-1.5 px-10 shadow-lg text-white bg-pinks `}
-                          >
-                            View Stats
-                          </button>
-                        </div>
+                        {stats?.created_at}
                       </td>
                     </tr>
                   ))
@@ -114,7 +86,6 @@ const ReviewTable = () => {
           </div>
         </div>
       </div>
-
       {/* Pagination Controls */}
       <nav className="flex items-center justify-center py-4">
         <ul className="flex items-center justify-center text-sm h-auto gap-12">
@@ -131,7 +102,7 @@ const ReviewTable = () => {
             <ul className="flex items-center justify-center gap-4">
               {Array.from(
                 {
-                  length: Math.ceil(reviews.length / itemsPerPage),
+                  length: Math.ceil(details.length / itemsPerPage),
                 },
                 (_, i) => (
                   <li key={i + 1} className="">
@@ -154,7 +125,7 @@ const ReviewTable = () => {
             <button
               onClick={() => paginate(currentPage + 1)}
               disabled={
-                currentPage === Math.ceil(reviews.length / itemsPerPage)
+                currentPage === Math.ceil(details.length / itemsPerPage)
               }
               className="flex items-center justify-center gap-2 px-3 h-8 ml-0 text-gray-500 bg-white font-medium text-base leading-7 hover:text-gray-700 disabled:opacity-50"
             >
@@ -167,4 +138,4 @@ const ReviewTable = () => {
   );
 };
 
-export default ReviewTable;
+export default StatsTable;

@@ -110,6 +110,40 @@ export const ReviewRedirect = async (token, number) => {
   }
 };
 
+// get review stats redirect page data
+export const ReviewStats = async (token) => {
+  try {
+    const response = await axios.get(`${URL}/reviews/statistics/${token}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearer}`,
+      },
+    });
+
+    console.log("Humor me Stats data", response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to fetch",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Links fetched successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
 // send review sms
 export const SendReviewSms = async (userdata) => {
   try {

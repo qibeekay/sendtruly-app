@@ -37,6 +37,9 @@ const EnterpriseCompose = () => {
     link_type: "external",
   });
 
+  // Track the selected link details
+  const [selectedLink, setSelectedLink] = useState(null);
+
   // Fetch groups on mount
   useEffect(() => {
     const getAllList = async () => {
@@ -70,12 +73,19 @@ const EnterpriseCompose = () => {
     }));
   };
 
-  //   handle selectchange
+  // Handle link selection
   const handleSelectChange = (event) => {
+    const selectedLinkId = event.target.value;
+    const selectedLinkDetails = links.find(
+      (link) => link.id === Number(selectedLinkId)
+    );
+
     setreviewSmsData((prev) => ({
       ...prev,
-      link_id: event.target.value,
+      link_id: selectedLinkId,
     }));
+
+    setSelectedLink(selectedLinkDetails);
   };
 
   // Fetch all review links
@@ -89,7 +99,7 @@ const EnterpriseCompose = () => {
     fetchLinks();
   }, []);
 
-  //   function to send review sms
+  // Function to send review SMS
   const sendReviewSms = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -106,6 +116,22 @@ const EnterpriseCompose = () => {
     });
     setLoading(false);
   };
+
+  // Format the message and link for display
+  const formattedMessage = (
+    <div>
+      <p>Hi Receiver's name,</p>
+      <p className="py-2">{reviewSmsData.message}</p>
+      <p>
+        Click the link below:{" "}
+        {selectedLink && (
+          <span className="text-blue-500">{selectedLink.review_url}</span>
+        )}
+      </p>
+    </div>
+  );
+
+  console.log(selectedLink);
 
   return (
     <div>
@@ -269,8 +295,8 @@ const EnterpriseCompose = () => {
             {/* Display Message + Links */}
             <div className="w-[30rem]">
               <div className="bg-white p-4 rounded-[10px] h-full">
-                <div className="bg-slate-500">
-                  <p></p>
+                <div className="bg-[#D9D9D9] text-black p-4 rounded-[10px]">
+                  {formattedMessage}
                 </div>
               </div>
             </div>

@@ -22,6 +22,7 @@ import Enterprise from "./pages/authenticated/enterprise/Enterprise";
 import { TabProvider } from "./utility/TabContext";
 import Compose from "./pages/authenticated/enterprise-compose/Compose";
 import ReviewsPage from "./pages/unauthenticated/reviews/ReviewsPage";
+import ViewStats from "./pages/authenticated/enterprise/ViewStats";
 
 function App() {
   return (
@@ -66,6 +67,8 @@ function App() {
           </TabProvider>
         }
       />
+      <Route path="/dashboard/enterprise/:token" element={<ViewStats />} />
+
       {/* Verifications  */}
       <Route path="/kyc/:usertoken" element={<Kyc />} />
     </Routes>

@@ -14,7 +14,7 @@ const emojiOptions = [emoji1, emoji2, emoji3, emoji4, emoji5]; // Emoji rating o
 const starOptions = [1, 2, 3, 4, 5]; // Star rating options
 
 const ReviewsPage = () => {
-  const { reviewId } = useParams(); // ✅ Extract reviewId from the route
+  const { reviewId } = useParams(); // Extract reviewId from the route
   const [searchParams] = useSearchParams();
   const number = searchParams.get("t");
   const [review, setReview] = useState({});

@@ -12,6 +12,7 @@ const Addlinks = () => {
     link: "",
     reaction_type: "emoji", // Default to emoji
     texts: "",
+    link_type: "external", // Default to external
   });
 
   const handleInputChange = (e) => {
@@ -21,6 +22,10 @@ const Addlinks = () => {
 
   const handleReactionChange = (reaction) => {
     setFormData((prev) => ({ ...prev, reaction_type: reaction }));
+  };
+
+  const handleLinkTypeChange = (link) => {
+    setFormData((prev) => ({ ...prev, link_type: link }));
   };
 
   const createReviewLink = async (e) => {
@@ -59,34 +64,67 @@ const Addlinks = () => {
             className="flex flex-col gap-4 mt-5"
             onSubmit={createReviewLink}
           >
-            {/* website */}
+            {/* Links type */}
             <div>
-              <label htmlFor="">Choose a website</label>
-              <div>
-                <select
-                  name="link_name"
-                  className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
-                  value={formData.link_name}
-                  onChange={handleInputChange}
-                >
-                  <option value="Google">Google</option>
-                  <option value="Facebook">Facebook</option>
-                  <option value="Others">Others</option>
-                </select>
+              <p>Link type</p>
+              {/* type select */}
+              <div className=" flex gap-2">
+                {/* external select  */}
+                <label className="flex items-center gap-2 font-medium text-lg cursor-pointer">
+                  <input
+                    type="radio"
+                    name="link_type"
+                    checked={formData.link_type === "external"}
+                    onChange={() => handleLinkTypeChange("external")}
+                  />
+                  External
+                </label>
+
+                <label className="flex items-center gap-2 font-medium text-lg cursor-pointer">
+                  <input
+                    type="radio"
+                    name="link_type"
+                    checked={formData.link_type === "internal"}
+                    onChange={() => handleLinkTypeChange("internal")}
+                  />
+                  Internal
+                </label>
               </div>
             </div>
 
-            {/* review link */}
-            <div>
-              <input
-                type="text"
-                className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
-                placeholder="Enter your review link"
-                name="link"
-                value={formData.link}
-                onChange={handleInputChange}
-              />
-            </div>
+            {/* Conditional rendering for website and review link */}
+            {formData.link_type === "external" && (
+              <>
+                {/* website */}
+                <div>
+                  <label htmlFor="">Choose a website</label>
+                  <div>
+                    <select
+                      name="link_name"
+                      className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
+                      value={formData.link_name}
+                      onChange={handleInputChange}
+                    >
+                      <option value="Google">Google</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="Others">Others</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* review link */}
+                <div>
+                  <input
+                    type="text"
+                    className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
+                    placeholder="Enter your review link"
+                    name="link"
+                    value={formData.link}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </>
+            )}
 
             {/* reaction type */}
             <div>
