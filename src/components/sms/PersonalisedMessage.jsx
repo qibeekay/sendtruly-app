@@ -4,7 +4,7 @@ import { Select, useToast } from "@chakra-ui/react";
 import { GetDeliveryReport, GetEstimate } from "../../api/sms";
 import EstimatedPriceModal from "./EstimatedPriceModal";
 
-const ComposeSms = () => {
+const PersonalisedMessage = () => {
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [Loading, setLoading] = useState(false);
@@ -172,6 +172,13 @@ const ComposeSms = () => {
     }));
   };
 
+  // Format the message and link/invoice for display
+  const formattedMessage = (
+    <div>
+      <p>Hi Receiver's name,</p>
+      <p className="py-2">{bulkSmsData.message}</p>
+    </div>
+  );
   return (
     <div>
       <div className="">
@@ -284,7 +291,14 @@ const ComposeSms = () => {
               </div>
             </div>
 
-            <div className="w-[30rem]"></div>
+            {/* Display Message */}
+            <div className="w-full md:w-[30rem]">
+              <div className="bg-white p-4 rounded-[10px] h-full">
+                <div className="bg-[#D9D9D9] text-black p-4 rounded-[10px]">
+                  {formattedMessage}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* message type */}
@@ -435,11 +449,11 @@ const ComposeSms = () => {
           loading={Loading}
           smsData={bulkSmsData}
           fetchEstimate={fetchEstimate}
-          isPersonalised={false}
+          isPersonalised={true}
         />
       </div>
     </div>
   );
 };
 
-export default ComposeSms;
+export default PersonalisedMessage;

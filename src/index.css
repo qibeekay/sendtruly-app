@@ -18,3 +18,12 @@
   --grey: #a1a8bb21;
   --white: white;
 }
+
+.hide-scroll {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

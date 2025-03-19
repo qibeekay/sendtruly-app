@@ -19,14 +19,14 @@ const ViewStats = () => {
     const fetchData = async () => {
       setLoading(true);
       const result = await ReviewStats(token);
-      console.log(result.data);
+      //console.log(result.data);
       setStat(result.data);
       setLoading(false);
     };
     fetchData();
   }, [token]);
 
-  console.log(stat?.feedbacks?.feedback_details);
+  //console.log(stat?.feedbacks?.feedback_details);
 
   return (
     <DashboardLayout pageName={"View Stats"}>

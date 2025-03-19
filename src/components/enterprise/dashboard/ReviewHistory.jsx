@@ -1,6 +1,7 @@
 import React from "react";
 import { useTabContext } from "../../../utility/TabContext";
 import ReviewTable from "./ReviewTable";
+import TextTwoPayTable from "./TextTwoPayTable";
 
 const ReviewHistory = () => {
   const { activeTab, setTab } = useTabContext();
@@ -24,7 +25,7 @@ const ReviewHistory = () => {
           >
             Review
           </button>
-          <button
+          {/* <button
             onClick={() => handleTabClick("2")}
             className={`flex items-center justify-center w-[130px] h-[51px] border border-pinks text-sm rounded-[5px] ${
               activeTab === "2"
@@ -33,11 +34,11 @@ const ReviewHistory = () => {
             }`}
           >
             Sent SMS History
-          </button>
+          </button> */}
           <button
-            onClick={() => handleTabClick("3")}
+            onClick={() => handleTabClick("2")}
             className={`flex items-center justify-center w-[130px] h-[51px] border border-pinks rounded-[5px] text-sm ${
-              activeTab === "3"
+              activeTab === "2"
                 ? "bg-pinks font-bold text-white"
                 : "bg-white text-pinks"
             }`}
@@ -54,8 +55,13 @@ const ReviewHistory = () => {
               <ReviewTable />
             </div>
           )}
-          {activeTab === "2" && <div> hello 222 </div>}
-          {activeTab === "3" && <div> hello 333 </div>}
+          {/* {activeTab === "2" && <div> hello 222 </div>} */}
+          {activeTab === "2" && (
+            <div>
+              {" "}
+              <TextTwoPayTable />
+            </div>
+          )}
         </div>
       </div>
     </div>

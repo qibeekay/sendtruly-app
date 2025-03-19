@@ -144,7 +144,7 @@ function Dashboard() {
       );
       setIsLoading(false);
 
-      console.log("resss", res.data);
+      //console.log("resss", res.data);
       if (res.data.success) {
         setTrxHistory(res.data.data);
       } else {
@@ -195,7 +195,7 @@ function Dashboard() {
           <h4>Account Balance</h4>
           <h1>
             <FaNairaSign className={styles.icon} />
-            {parseInt(info.account_balance).toLocaleString("en-US", {
+            {parseInt(info?.account_balance).toLocaleString("en-US", {
               style: "decimal",
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,

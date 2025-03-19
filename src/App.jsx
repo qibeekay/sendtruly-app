@@ -23,6 +23,7 @@ import { TabProvider } from "./utility/TabContext";
 import Compose from "./pages/authenticated/enterprise-compose/Compose";
 import ReviewsPage from "./pages/unauthenticated/reviews/ReviewsPage";
 import ViewStats from "./pages/authenticated/enterprise/ViewStats";
+import TextTwopay from "./pages/unauthenticated/text2pay/TextTwopay";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route element={<Register />} path="/register" />
       <Route element={<About />} path="/about" />
       <Route element={<ReviewsPage />} path="/reviews/:reviewId" />
+      <Route element={<TextTwopay />} path="/invoice/:token" />
 
       {/* Authenticated ROutes  */}
       <Route path="/dashboard" element={<Dashboard />} />

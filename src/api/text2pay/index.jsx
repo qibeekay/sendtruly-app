@@ -7,18 +7,17 @@ const getToken = () => {
   return userData?.token || "";
 };
 
-// create review links
-export const CreateLink = async (userdata) => {
+// Create payment links
+export const CreateInvoice = async (userdata) => {
   try {
-    const response = await axios.post(`${URL}/reviews/create-links`, userdata, {
+    const response = await axios.post(`${URL}/invoices/create`, userdata, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getToken()}`,
       },
     });
 
-    //console.log("review response", response);
-    //console.log(getToken);
+    //console.log("payment response", response);
 
     if (!response.data.success) {
       return {
@@ -33,7 +32,6 @@ export const CreateLink = async (userdata) => {
       data: response.data.data,
     };
   } catch (error) {
-    // Handle network/HTTP errors
     return {
       success: false,
       message:
@@ -42,17 +40,54 @@ export const CreateLink = async (userdata) => {
   }
 };
 
-// get review links
-export const GetReviewLinks = async () => {
+// connect and verify paystack key
+export const VerifyKey = async (secret) => {
   try {
-    const response = await axios.get(`${URL}/reviews/user-links`, {
+    const response = await axios.post(
+      `${URL}/invoices/payment/verify-secret-key`,
+      secret,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+
+    //console.log("payment response", response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to send",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Sms sent successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
+// get all invoice
+export const GetPaymentLinks = async () => {
+  try {
+    const response = await axios.get(`${URL}/invoices/get-invoices`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getToken()}`,
       },
     });
 
-    //console.log(response);
+    //console.log("Text2pay", response);
 
     if (!response.data.success) {
       return {
@@ -76,11 +111,49 @@ export const GetReviewLinks = async () => {
   }
 };
 
+// send invoice / payment sms
+export const SendPaymentSms = async (userdata) => {
+  try {
+    const response = await axios.post(
+      `${URL}/invoices/text2pay/sms`,
+      userdata,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+
+    //console.log("review response", response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to send",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Sms sent successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
 // get reviews redirect page data
-export const ReviewRedirect = async (token, number) => {
+export const InvoiceRedirect = async (token, number, email) => {
   try {
     const response = await axios.get(
-      `${URL}/reviews/page.redirect/${token}?t=${number}`,
+      `${URL}/invoices/page.redirect/${token}?t=${number}e=${email}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -113,83 +186,19 @@ export const ReviewRedirect = async (token, number) => {
   }
 };
 
-// get review stats redirect page data
-export const ReviewStats = async (token) => {
+// activates and open payment gateway
+export const ActivatePayment = async (userdata) => {
   try {
-    const response = await axios.get(`${URL}/reviews/statistics/${token}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
-
-    //console.log("Humor me Stats data", response);
-
-    if (!response.data.success) {
-      return {
-        success: false,
-        message: response.data.message || "Failed to fetch",
-      };
-    }
-
-    return {
-      success: true,
-      message: response.data.message || "Links fetched successfully",
-      data: response.data.data,
-    };
-  } catch (error) {
-    // Handle network/HTTP errors
-    return {
-      success: false,
-      message:
-        error.response?.data?.message || error.message || "Network error",
-    };
-  }
-};
-
-// send review sms
-export const SendReviewSms = async (userdata) => {
-  try {
-    const response = await axios.post(`${URL}/reviews/send-sms`, userdata, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
-
-    //console.log("review response", response);
-
-    if (!response.data.success) {
-      return {
-        success: false,
-        message: response.data.message || "Failed to send",
-      };
-    }
-
-    return {
-      success: true,
-      message: response.data.message || "Sms sent successfully",
-      data: response.data.data,
-    };
-  } catch (error) {
-    // Handle network/HTTP errors
-    return {
-      success: false,
-      message:
-        error.response?.data?.message || error.message || "Network error",
-    };
-  }
-};
-
-// make a review
-export const MakeReview = async (userdata) => {
-  try {
-    const response = await axios.post(`${URL}/reviews/user/review`, userdata, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const response = await axios.post(
+      `${URL}/payment/pay-for-invoice`,
+      userdata,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
 
     //console.log("review response", response);
 
@@ -216,9 +225,9 @@ export const MakeReview = async (userdata) => {
 };
 
 // fetch my review
-export const GetReviews = async () => {
+export const GetMessages = async () => {
   try {
-    const response = await axios.get(`${URL}/reviews/my-reviews`, {
+    const response = await axios.get(`${URL}/invoices/text2pay/messages`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getToken()}`,

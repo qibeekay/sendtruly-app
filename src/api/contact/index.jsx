@@ -41,7 +41,7 @@ export const GetAllList = async () => {
       headers: { Authorization: `Bearer ${bearer}` },
     });
 
-    console.log(response.data.data);
+    //console.log(response.data.data);
 
     if (!response.data.success) {
       return {
@@ -105,7 +105,7 @@ export const GetAllContacts = async () => {
       headers: { Authorization: `Bearer ${bearer}` },
     });
 
-    console.log(response.data.data);
+    //console.log(response.data.data);
 
     if (!response.data.success) {
       return {
@@ -205,7 +205,7 @@ export const DeleteGroup = async (userdata) => {
       }
     );
 
-    console.log(response);
+    //console.log(response);
 
     if (!response.data.success) {
       return {

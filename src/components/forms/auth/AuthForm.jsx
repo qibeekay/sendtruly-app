@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../forms.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -16,7 +16,9 @@ import { FaEye } from "react-icons/fa6";
 function AuthForm({ form, userMail }) {
   const navigate = useNavigate();
   const toast = useToast();
-  const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("data_user_main"))
+  );
 
   const [loader, setLoader] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -32,6 +34,14 @@ function AuthForm({ form, userMail }) {
   const [otpLoader, setOtpLoader] = useState(false);
 
   const [show, setShow] = useState(false);
+
+  // Sync localStorage with state
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("data_user_main"));
+    if (data) {
+      setUserData(data);
+    }
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -92,7 +102,6 @@ function AuthForm({ form, userMail }) {
       );
       setLoader(false);
       if (res.data.success) {
-        // if (res.data.data.is_verified) {
         toast({
           title: "Welcome Back.",
           status: "success",
@@ -100,10 +109,8 @@ function AuthForm({ form, userMail }) {
           isClosable: true,
         });
         localStorage.setItem("data_user_main", JSON.stringify(res.data.data));
+        setUserData(res.data.data); // Update state with new user data
         navigate("/dashboard");
-        // } else {
-        //   return navigate(`/verify/${email}`);
-        // }
       } else {
         toast({
           title: res.data.message,
@@ -143,6 +150,7 @@ function AuthForm({ form, userMail }) {
           isClosable: true,
         });
         localStorage.setItem("data_user_main", JSON.stringify(res.data.data));
+        setUserData(res.data.data);
         navigate("/dashboard");
       } else {
         toast({

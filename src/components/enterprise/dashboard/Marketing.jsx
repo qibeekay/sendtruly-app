@@ -4,6 +4,7 @@ import img1 from "../../../assets/sms.png";
 import img2 from "../../../assets/coming.png";
 import img3 from "../../../assets/coming1.png";
 import img4 from "../../../assets/soon.png";
+import { Link } from "react-router-dom";
 
 const Marketing = () => {
   return (
@@ -31,7 +32,7 @@ const Marketing = () => {
       </div>
 
       {/* second column */}
-      <div className="grid grid-cols-3 items-center gap-4 mt-7">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 items-center gap-4 mt-7">
         {/* sms-t2p-review */}
         <div className=" min-h-[238px] shadow-md flex flex-col justify-between rounded-[20px] px-4 py-7 bg-[#E2FFDF]">
           {/* first section */}
@@ -44,9 +45,12 @@ const Marketing = () => {
             </div>
             {/* button */}
             <div>
-              <button className="shadow bg-white rounded-[10px] px-5 py-1">
+              <Link
+                to={"dashboard/enterprise/dashboard"}
+                className="shadow bg-white rounded-[10px] px-5 py-1"
+              >
                 Get Started
-              </button>
+              </Link>
             </div>
           </div>
           {/* second section */}

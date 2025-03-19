@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { AddUserToList } from "../../api/contact";
-import { SendSms } from "../../api/sms";
+import { SendPersonalisedSms, SendSms } from "../../api/sms"; // Import both APIs
 import { useToast } from "@chakra-ui/react";
 
 const EstimatedPriceModal = ({
@@ -11,6 +11,7 @@ const EstimatedPriceModal = ({
   loading,
   smsData,
   fetchEstimate,
+  isPersonalised, // New prop to determine which API to use
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
@@ -26,12 +27,18 @@ const EstimatedPriceModal = ({
     e.preventDefault();
     setIsLoading(true);
 
-    const result = await SendSms({
-      ...smsData,
-      sms_cost: estimate?.estimated_price,
-    });
+    // Determine which API to call based on the isPersonalised prop
+    const result = isPersonalised
+      ? await SendPersonalisedSms({
+          ...smsData,
+          sms_cost: estimate?.estimated_price,
+        })
+      : await SendSms({
+          ...smsData,
+          sms_cost: estimate?.estimated_price,
+        });
 
-    console.log(result.success);
+    //console.log(result.success);
     toast({
       title: result.success ? "Success!" : "Error occurred",
       description: result.message,
@@ -41,6 +48,7 @@ const EstimatedPriceModal = ({
     });
     setIsLoading(false);
   };
+
   return (
     <div
       className={`fixed left-0 top-0 w-full bg-black/50 min-h-screen z-[100] items-center justify-center ${

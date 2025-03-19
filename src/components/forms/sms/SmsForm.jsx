@@ -87,7 +87,7 @@ function SmsForm({ form, changeState, setChangeState, setZero_contacts }) {
     scheduled_data: {},
   });
 
-  // console.log(changeState)
+  //console.log(changeState)
 
   // send bulk sms api
   const sendBulkSms = async () => {

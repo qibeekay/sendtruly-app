@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import ComposeSms from "../../../components/sms/ComposeSms";
 import SentMessageTab from "../../../components/sms/SentMessageTab";
 import GetScheduledMessages from "../../../components/sms/GetScheduledMessages";
+import PersonalisedMessage from "../../../components/sms/PersonalisedMessage";
+import SentoutTab from "../../../components/sms/SentoutTab";
 
 function Sms() {
   const navigate = useNavigate();
@@ -98,9 +100,9 @@ function Sms() {
           onChange={(index) => setChangeState(index)}
         >
           <TabList
-            // overflowX="auto" // Enable horizontal scrolling
+            overflowX="auto" // Enable horizontal scrolling
             whiteSpace="nowrap"
-            className={styles.list}
+            className={`${styles.list} hide-scroll`}
           >
             <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
               Compose SMS
@@ -115,31 +117,26 @@ function Sms() {
               Sent Messages
             </Tab>
             <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+              Message History
+            </Tab>
+            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
               Drafts
             </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              {/* <div className={styles.tab_format_container}>
-                <SmsForm
-                  form="compose"
-                  changeState={changeState}
-                  setZero_contacts={setZero_contacts}
-                />
-              </div> */}
               <ComposeSms />
             </TabPanel>
             <TabPanel>
-              <div className={styles.tab_format_container}>
-                {/* <SmsForm form="personal" changeState={changeState} /> */}
-              </div>
+              <PersonalisedMessage />
             </TabPanel>
             <TabPanel>
-              {/* <SmsForm form="scheduled" changeState={changeState} /> */}
               <GetScheduledMessages />
             </TabPanel>
             <TabPanel>
-              {/* <SmsForm form="sent" changeState={changeState} /> */}
+              <SentoutTab />
+            </TabPanel>
+            <TabPanel>
               <SentMessageTab />
             </TabPanel>
             <TabPanel>

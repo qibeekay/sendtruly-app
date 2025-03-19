@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import img1 from "../../../assets/sms.png";
 import { useToast } from "@chakra-ui/react";
 import { CreateLink, GetReviewLinks } from "../../../api/reviews";
+import PaymentsLink from "./PaymentsLink";
 
 const Addlinks = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
+  // formdata the api expects
   const [formData, setFormData] = useState({
     link_name: "Google", // Default to Google
     link: "",
@@ -15,19 +17,23 @@ const Addlinks = () => {
     link_type: "external", // Default to external
   });
 
+  // handle inputs change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // handles reaction type change
   const handleReactionChange = (reaction) => {
     setFormData((prev) => ({ ...prev, reaction_type: reaction }));
   };
 
+  // hnadles when link_type is changed
   const handleLinkTypeChange = (link) => {
     setFormData((prev) => ({ ...prev, link_type: link }));
   };
 
+  // function to call and create review link
   const createReviewLink = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -42,14 +48,14 @@ const Addlinks = () => {
       isClosable: true,
     });
 
-    console.log(result);
+    //console.log(result);
 
     setIsLoading(false);
   };
 
   return (
     <div>
-      <div className="flex items-center gap-4 mt-7">
+      <div className="flex flex-col md:flex-row items-center gap-4 mt-7">
         {/* review link */}
         <div className="w-full min-h-[238px] shadow-md rounded-[20px] px-10 py-7 bg-[#B498F973]">
           {/* text */}
@@ -176,41 +182,8 @@ const Addlinks = () => {
           </form>
         </div>
 
-        {/* payment link */}
-        <div className="w-full min-h-[238px] shadow-md rounded-[20px] px-4 py-7 bg-[#FF1D9C57]">
-          {/* text */}
-          <div className="">
-            <h1>Ask For Online Reviews</h1>
-            <p>Where do you want to increase your online reputation?</p>
-          </div>
-
-          {/* form */}
-          <form action="" className="flex flex-col gap-4 mt-5">
-            {/* website */}
-            <div>
-              <label htmlFor="">Choose a website</label>
-              <div>
-                <select
-                  name=""
-                  id=""
-                  className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
-                >
-                  <option value="">Google</option>
-                  <option value="">Facebook</option>
-                </select>
-              </div>
-            </div>
-
-            {/* review link */}
-            <div>
-              <input
-                type="text"
-                className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
-                placeholder="Enter your review link"
-              />
-            </div>
-          </form>
-        </div>
+        {/* paymentLink */}
+        <PaymentsLink />
       </div>
     </div>
   );

@@ -209,7 +209,7 @@ function DashboardLayout({
           <div className={`${styles.top_nav_children} px-5`}>
             <PageLoader isLoading={isLoading} />
             {!userData.kyc_status && (
-              <Alert status="warning" mt={"20px"}>
+              <Alert status="warning" my={"20px"}>
                 <AlertIcon />
                 <Link
                   to={{

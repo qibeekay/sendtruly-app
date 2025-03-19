@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
-import EstimatedPriceModal from "../../sms/EstimatedPriceModal";
 import { useToast } from "@chakra-ui/react";
-import { GetAllList, GetContactsByToken } from "../../../api/contact";
-import { GetEstimate } from "../../../api/sms";
+import { GetAllList } from "../../../api/contact";
 import { useTabContext } from "../../../utility/TabContext";
 import { GetReviewLinks, SendReviewSms } from "../../../api/reviews";
+import { GetPaymentLinks, SendPaymentSms } from "../../../api/text2pay";
 
 const EnterpriseCompose = () => {
   const [groups, setGroups] = useState([]);
   const [links, setLinks] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [selectedListTokens, setSelectedListTokens] = useState("");
-  const [estimate, setEstimate] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
   // Handles tabs
@@ -26,7 +23,7 @@ const EnterpriseCompose = () => {
 
   const toast = useToast();
 
-  const [reviewSmsData, setreviewSmsData] = useState({
+  const [reviewSmsData, setReviewSmsData] = useState({
     sender_id: "",
     message: "",
     list_id: "",
@@ -37,8 +34,16 @@ const EnterpriseCompose = () => {
     link_type: "external",
   });
 
-  // Track the selected link details
+  const [paymentSmsData, setPaymentSmsData] = useState({
+    sender_id: "",
+    message: "",
+    list_id: "",
+    invoice_token: "",
+  });
+
+  // Track the selected link and invoice details
   const [selectedLink, setSelectedLink] = useState(null);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
 
   // Fetch groups on mount
   useEffect(() => {
@@ -56,18 +61,26 @@ const EnterpriseCompose = () => {
     setSelectedListTokens(String(list_token));
   };
 
-  // Update reviewSmsData when selectedListTokens changes
+  // Update reviewSmsData and paymentSmsData when selectedListTokens changes
   useEffect(() => {
-    setreviewSmsData((prevData) => ({
+    setReviewSmsData((prevData) => ({
+      ...prevData,
+      list_id: selectedListTokens,
+    }));
+    setPaymentSmsData((prevData) => ({
       ...prevData,
       list_id: selectedListTokens,
     }));
   }, [selectedListTokens]);
 
-  // Handle SMS input change
+  // Handle SMS input change for reviewSmsData
   const smsInputChange = (event) => {
     const { name, value } = event.target;
-    setreviewSmsData((prevFormData) => ({
+    setReviewSmsData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+    setPaymentSmsData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
@@ -80,33 +93,77 @@ const EnterpriseCompose = () => {
       (link) => link.id === Number(selectedLinkId)
     );
 
-    setreviewSmsData((prev) => ({
+    setReviewSmsData((prev) => ({
       ...prev,
       link_id: selectedLinkId,
     }));
 
     setSelectedLink(selectedLinkDetails);
+    setSelectedInvoice(null); // Clear selected invoice when a review link is selected
   };
 
-  // Fetch all review links
+  // Handle invoice selection
+  const handleInvoiceSelectChange = (event) => {
+    const selectedInvoiceToken = event.target.value;
+    const selectedInvoiceDetails = invoices.find(
+      (invoice) => invoice.token === selectedInvoiceToken
+    );
+
+    setPaymentSmsData((prev) => ({
+      ...prev,
+      invoice_token: selectedInvoiceToken,
+    }));
+
+    setSelectedInvoice(selectedInvoiceDetails);
+    setSelectedLink(null); // Clear selected link when an invoice is selected
+  };
+
+  // Fetch all review links and invoices
+  const fetchLinks = async () => {
+    setIsLoading(true);
+    const result = await GetReviewLinks();
+    setLinks(result.data.data);
+    setIsLoading(false);
+  };
+
+  const fetchInvoices = async () => {
+    setIsLoading(true);
+    const result = await GetPaymentLinks();
+    setInvoices(result.data.data);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    const fetchLinks = async () => {
-      setIsLoading(true);
-      const result = await GetReviewLinks();
-      setLinks(result.data.data);
-      setIsFetching(false);
-    };
     fetchLinks();
+    fetchInvoices();
   }, []);
 
-  // Function to send review SMS
-  const sendReviewSms = async (e) => {
+  // Function to send SMS based on selected link or invoice
+  const sendSms = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const result = await SendReviewSms(reviewSmsData);
+    let result;
+    if (selectedLink) {
+      // Send review SMS
+      result = await SendReviewSms(reviewSmsData);
+    } else if (selectedInvoice) {
+      // Send payment SMS
+      result = await SendPaymentSms(paymentSmsData);
+    } else {
+      // No link or invoice selected
+      toast({
+        title: "Error",
+        description: "Please select a review link or an invoice.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      setLoading(false);
+      return;
+    }
 
-    console.log("reviews results", result);
+    //console.log("SMS result:", result);
     toast({
       title: result.success ? "Success!" : "Error occurred",
       description: result.message,
@@ -117,21 +174,27 @@ const EnterpriseCompose = () => {
     setLoading(false);
   };
 
-  // Format the message and link for display
+  // Format the message and link/invoice for display
   const formattedMessage = (
     <div>
       <p>Hi Receiver's name,</p>
       <p className="py-2">{reviewSmsData.message}</p>
-      <p>
-        Click the link below:{" "}
-        {selectedLink && (
+      {selectedLink && (
+        <p>
+          Click the link below:{" "}
           <span className="text-blue-500">{selectedLink.review_url}</span>
-        )}
-      </p>
+        </p>
+      )}
+      {selectedInvoice && (
+        <p>
+          Invoice Details:{" "}
+          <span className="text-blue-500">
+            {selectedInvoice.title} - NGN{selectedInvoice.total_price}
+          </span>
+        </p>
+      )}
     </div>
   );
-
-  console.log(selectedLink);
 
   return (
     <div>
@@ -139,7 +202,7 @@ const EnterpriseCompose = () => {
         {/* Form */}
         <form action="" className="w-full flex flex-col gap-4">
           {/* Sender ID / Contacts List */}
-          <div className="flex gap-10">
+          <div className="flex flex-col md:flex-row gap-10">
             <div className="w-full flex flex-col gap-4">
               {/* Sender ID */}
               <div>
@@ -158,7 +221,7 @@ const EnterpriseCompose = () => {
             </div>
 
             {/* Contacts List */}
-            <div className="w-[30rem]">
+            <div className="w-full md:w-[30rem]">
               <div className="bg-white p-4 rounded-[10px]">
                 <h1>Add from list and group</h1>
 
@@ -197,9 +260,9 @@ const EnterpriseCompose = () => {
           </div>
 
           {/* Messages / Empty Fields */}
-          <div className="flex gap-10">
+          <div className="flex flex-col md:flex-row gap-10">
             {/* Messages */}
-            <div className="w-full">
+            <div className="w-full ">
               <label htmlFor="message">Message</label>
               <div>
                 <div className="border border-black/25 rounded-t-[10px] overflow-hidden w-full h-[57px] bg-white flex items-center">
@@ -227,7 +290,7 @@ const EnterpriseCompose = () => {
                   >
                     Attach review link
                   </button>
-                  {/* Attach Payment Link */}
+                  {/* Attach Invoice */}
                   <button
                     type="button"
                     onClick={() => handleTabClick("3")}
@@ -237,7 +300,7 @@ const EnterpriseCompose = () => {
                         : "bg-white text-black"
                     }`}
                   >
-                    Attach payment link
+                    Attach invoice
                   </button>
                 </div>
                 {/* All Tabs */}
@@ -249,7 +312,11 @@ const EnterpriseCompose = () => {
                       value={reviewSmsData.message}
                       onChange={(e) => {
                         const message = e.target.value;
-                        setreviewSmsData((prevData) => ({
+                        setReviewSmsData((prevData) => ({
+                          ...prevData,
+                          message,
+                        }));
+                        setPaymentSmsData((prevData) => ({
                           ...prevData,
                           message,
                         }));
@@ -260,6 +327,7 @@ const EnterpriseCompose = () => {
                     ></textarea>
                   )}
 
+                  {/* Attach Review Link Tab */}
                   {activeTab === "2" && (
                     <div className="h-[272px] bg-white px-4 pt-10">
                       <select
@@ -277,7 +345,25 @@ const EnterpriseCompose = () => {
                       </select>
                     </div>
                   )}
-                  {activeTab === "3" && <div>Payment Link</div>}
+
+                  {/* Attach Invoice Tab */}
+                  {activeTab === "3" && (
+                    <div className="h-[272px] bg-white px-4 pt-10">
+                      <select
+                        id="invoices"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none"
+                        value={paymentSmsData?.invoice_token}
+                        onChange={handleInvoiceSelectChange}
+                      >
+                        <option value="">Choose an invoice</option>
+                        {invoices?.map((invoice) => (
+                          <option key={invoice?.token} value={invoice?.token}>
+                            {invoice?.title} - NGN{invoice?.total_price}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
 
                 {/* Display Character and Page Count */}
@@ -292,8 +378,8 @@ const EnterpriseCompose = () => {
               </div>
             </div>
 
-            {/* Display Message + Links */}
-            <div className="w-[30rem]">
+            {/* Display Message + Links/Invoices */}
+            <div className="w-full md:w-[30rem]">
               <div className="bg-white p-4 rounded-[10px] h-full">
                 <div className="bg-[#D9D9D9] text-black p-4 rounded-[10px]">
                   {formattedMessage}
@@ -305,8 +391,8 @@ const EnterpriseCompose = () => {
           {/* Buttons */}
           <div>
             <button
-              className="border border-black/25 rounded-[10px] p-4 cursor-pointer bg-pinks text-white text-lg min-w-[653px]"
-              onClick={sendReviewSms}
+              className="border border-black/25 rounded-[10px] p-4 cursor-pointer bg-pinks text-white text-lg w-full md:w-[653px]"
+              onClick={sendSms}
             >
               {Loading ? "Loading..." : "Send message"}
             </button>

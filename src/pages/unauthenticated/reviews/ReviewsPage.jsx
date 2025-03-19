@@ -76,7 +76,7 @@ const ReviewsPage = () => {
     fetchData();
   }, [reviewId, number]);
 
-  console.log(formData);
+  //console.log(formData);
 
   // Function to submit review
   const SubmitReview = async (e) => {

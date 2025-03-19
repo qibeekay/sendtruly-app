@@ -69,6 +69,72 @@ export const SendSms = async (userdata) => {
   }
 };
 
+export const SendPersonalisedSms = async (userdata) => {
+  try {
+    const response = await axios.post(
+      `${URL}/sms/send-personalized-sms`,
+      userdata,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearer}`,
+        },
+      }
+    );
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to send",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Sms sent successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
+// get sms delivery report
+export const GetSentMessage = async () => {
+  try {
+    const response = await axios.get(`${URL}/sms/get-sent-messages`, {
+      headers: { Authorization: `Bearer ${bearer}` },
+    });
+
+    //console.log("e kaaro", response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to fetch report",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Report fetched  successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};
+
 // get sms delivery report
 export const GetDeliveryReport = async () => {
   try {
@@ -76,7 +142,7 @@ export const GetDeliveryReport = async () => {
       headers: { Authorization: `Bearer ${bearer}` },
     });
 
-    console.log(response);
+    //console.log(response);
 
     if (!response.data.status) {
       return {
@@ -113,7 +179,7 @@ export const GetSingleReport = async (userdata) => {
       }
     );
 
-    // console.log(response.data.status);
+    //console.log(response.data.status);
 
     if (!response.data.status) {
       return {
@@ -147,7 +213,7 @@ export const GetScheduledSms = async () => {
       },
     });
 
-    console.log(response.data);
+    //console.log(response.data);
 
     return {
       data: response.data,
