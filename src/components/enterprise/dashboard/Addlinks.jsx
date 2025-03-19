@@ -55,7 +55,7 @@ const Addlinks = () => {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row items-center gap-4 mt-7">
+      <div className="flex flex-col md:flex-row gap-4 mt-7">
         {/* review link */}
         <div className="w-full min-h-[238px] shadow-md rounded-[20px] px-10 py-7 bg-[#B498F973]">
           {/* text */}
@@ -74,7 +74,7 @@ const Addlinks = () => {
             <div>
               <p>Link type</p>
               {/* type select */}
-              <div className=" flex gap-2">
+              <div className=" flex gap-4">
                 {/* external select  */}
                 <label className="flex items-center gap-2 font-medium text-lg cursor-pointer">
                   <input

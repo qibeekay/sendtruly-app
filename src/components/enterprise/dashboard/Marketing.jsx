@@ -46,7 +46,7 @@ const Marketing = () => {
             {/* button */}
             <div>
               <Link
-                to={"dashboard/enterprise/dashboard"}
+                to={"/dashboard/enterprise/compose"}
                 className="shadow bg-white rounded-[10px] px-5 py-1"
               >
                 Get Started
