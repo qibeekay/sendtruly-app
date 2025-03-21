@@ -1,5 +1,13 @@
 import styles from "./dashboardlayout.module.css";
-import logo from "../../../assets/logo.png";
+import logo from "../../../assets/lg.png";
+import settings from "../../../assets/settings.png";
+import sms from "../../../assets/sms-outline.png";
+import api from "../../../assets/api.png";
+import contact from "../../../assets/contact.png";
+import dash from "../../../assets/dash.png";
+import enterprise from "../../../assets/enterprise.png";
+import email from "../../../assets/email.png";
+import logout from "../../../assets/logout.png";
 import { Link, Navigate } from "react-router-dom";
 
 // icons imports
@@ -19,6 +27,7 @@ import { Alert, AlertIcon, useToast } from "@chakra-ui/react";
 import { AxiosInstance } from "../../../config";
 import PageLoader from "../../loaders/PageLoader";
 import { GetDashboardInfo } from "../../../api/dashboard";
+import { GetUserInfo } from "../../../api/profile";
 
 function DashboardLayout({
   pageName,
@@ -52,138 +61,225 @@ function DashboardLayout({
     return <Navigate to="/login" />;
   }
 
+  // Fetch user data
+  const fetchUserData = async () => {
+    setIsLoading(true);
+    const result = await GetUserInfo(userData?.user?.usertoken);
+    // setConnected(result?.data?.data?.connected);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   // [payment_step, pageName];
   return (
     <div className={styles.dashboard_container}>
       <div
         className={
           navState
-            ? `${styles.dashboard_navigation} ${styles.navbar_active}`
-            : `${styles.dashboard_navigation}`
+            ? `w-[250px] fixed h-screen z-10 bg-[#042f61] p-4 ${styles.navbar_active}`
+            : `w-[250px] fixed h-screen z-10 bg-[#042f61] hidden lg:block p-4`
         }
       >
-        <div className={styles.dashboard_logo_flex}>
-          <img src={logo} alt="" />
-          <IoMdClose className={styles.icon} onClick={toggleNav} />
-        </div>
-        <ul>
-          <li>
-            <Link
-              to="/dashboard"
-              className={
-                currentPath === "http://localhost:5173/dashboard" ||
-                currentPath === "https://sendtrulyapp.netlify.app/dashboard"
-                  ? styles.active
-                  : ""
-              }
-            >
-              <MdDashboard className={styles.icon} /> Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/sms"
-              className={currentPath.includes("sms") ? styles.active : ""}
-            >
-              {" "}
-              <FaMessage className={styles.icon} />
-              SMS
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/chats"
-              className={currentPath.includes("chats") ? styles.active : ""}
-            >
-              <IoMdChatbubbles className={styles.icon} />
-              Chats
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/enterprise/dashboard"
-              className={
-                currentPath.includes("enterprise") ? styles.active : ""
-              }
-            >
-              <IoMdChatbubbles className={styles.icon} />
-              Enterprise
-            </Link>
-            <div className=" pl-7">
-              <div>
+        <div className=" h-full flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between">
+              <img className="w-[150px]" src={logo} alt="" />
+
+              <IoMdClose
+                className="lg:hidden cursor-pointer"
+                color="white"
+                size={30}
+                onClick={toggleNav}
+              />
+            </div>
+
+            {/* links */}
+            <ul className="mt-10 font-poppins flex flex-col gap-6">
+              <li>
+                <Link
+                  to="/dashboards"
+                  className={
+                    currentPath.includes("dashboards")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
+                  }
+                >
+                  <div className="">
+                    <img src={dash} alt="" />
+                  </div>{" "}
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/sms"
+                  className={
+                    currentPath.includes("sms")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
+                  }
+                >
+                  {" "}
+                  <div className="">
+                    <img src={sms} alt="" />
+                  </div>
+                  SMS
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/chats"
+                  className={
+                    currentPath.includes("chats")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
+                  }
+                >
+                  <IoMdChatbubbles color="white" className={styles.icon} />
+                  Chats
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/email"
+                  className={
+                    currentPath.includes("chats")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
+                  }
+                >
+                  <div className="">
+                    <img src={email} alt="" />
+                  </div>
+                  Email
+                </Link>
+              </li>
+              <li>
                 <Link
                   to="/dashboard/enterprise/dashboard"
                   className={
-                    currentPath.includes("enterprise/dashboard")
-                      ? styles.active
-                      : ""
+                    currentPath.includes("enterprise")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
                   }
                 >
-                  <IoMdChatbubbles className={styles.icon} />
-                  Dashboard
+                  <div className="">
+                    <img src={enterprise} alt="" />
+                  </div>
+                  Enterprise
                 </Link>
-              </div>
-              <div>
+                <div className=" pl-9 flex flex-col gap-y-4 mt-4">
+                  <div className="">
+                    <Link
+                      to="/dashboard/enterprise/dashboard"
+                      className={
+                        currentPath.includes("enterprise/dashboard")
+                          ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                          : "flex items-center gap-5 font-light text-white"
+                      }
+                    >
+                      <IoMdChatbubbles className={styles.icon} />
+                      Dashboard
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      to="/dashboard/enterprise/compose"
+                      className={
+                        currentPath.includes("enterprise/compose")
+                          ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                          : "flex items-center gap-5 font-light text-white"
+                      }
+                    >
+                      <IoMdChatbubbles className={styles.icon} />
+                      Compose
+                    </Link>
+                  </div>
+                </div>
+              </li>
+              <li>
                 <Link
-                  to="/dashboard/enterprise/compose"
+                  to="/dashboard/contacts"
                   className={
-                    currentPath.includes("enterprise/compose")
-                      ? styles.active
-                      : ""
+                    currentPath.includes("contact")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
                   }
                 >
-                  <IoMdChatbubbles className={styles.icon} />
-                  Compose
+                  <div className="">
+                    <img src={contact} alt="" />
+                  </div>
+                  Contact
                 </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/api-doc"
+                  className={
+                    currentPath.includes("api-doc")
+                      ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                      : "flex items-center gap-5 font-light text-white"
+                  }
+                >
+                  <div className="">
+                    <img src={api} alt="" />
+                  </div>
+                  API
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* settings / profile / logout */}
+          <div className="flex flex-col gap-5">
+            {/* settings */}
+            <div>
+              <Link
+                to="/dashboard/settings"
+                className={
+                  currentPath.includes("settings")
+                    ? "flex items-center gap-5 text-[#FF5D6F] font-bold"
+                    : "flex items-center gap-5 font-light text-white"
+                }
+              >
+                <div className="">
+                  <img src={settings} alt="" />
+                </div>
+                Settings
+              </Link>
+            </div>
+
+            {/* logout */}
+            <div>
+              <Link
+                to="/login"
+                className="flex items-center gap-5 font-light text-white"
+                onClick={() => localStorage.removeItem("data_user_main")}
+              >
+                <div className="">
+                  <img src={logout} alt="" />
+                </div>
+                Logout
+              </Link>
+            </div>
+
+            {/* profile */}
+            <div className="flex items-center flex-row-reverse gap-4 justify-end">
+              <div className="">
+                <h4 className="text-white">
+                  {userData?.user?.fname} {userData?.user?.lname}{" "}
+                </h4>
+              </div>
+              <div className="text-white bg-black w-[3rem] aspect-square flex items-center justify-center rounded-full font-bold text-lg">
+                {capitalizeFirstLetter(userData?.user?.fname)}
+                {capitalizeFirstLetter(userData?.user?.lname)}
               </div>
             </div>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/contacts"
-              className={currentPath.includes("contact") ? styles.active : ""}
-            >
-              <MdContactPage className={styles.icon} />
-              Contact
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/history"
-              className={currentPath.includes("history") ? styles.active : ""}
-            >
-              <RiFileHistoryFill className={styles.icon} />
-              History
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/api-doc"
-              className={currentPath.includes("api") ? styles.active : ""}
-            >
-              <SiReadthedocs className={styles.icon} />
-              API
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/dashboard/settings"
-              className={currentPath.includes("settings") ? styles.active : ""}
-            >
-              <IoMdSettings className={styles.icon} />
-              Settings
-            </Link>
-          </li>
-          <li className={styles.logout_button}>
-            <Link
-              to="/login"
-              onClick={() => localStorage.removeItem("data_user_main")}
-            >
-              <IoMdLogOut className={styles.icon} />
-              Logout
-            </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
       <div className="w-full flex items-center justify-end">
         <div className="w-full lg:w-[calc(100%-250px)] bg-[#f7f5ec] min-h-screen">
@@ -193,17 +289,8 @@ function DashboardLayout({
               <HiMenuAlt2 className={styles.icon} onClick={toggleNav} />{" "}
               {pageName}
             </div>
-            <div className={styles.top_nav_right}>
-              <div className={styles.top_name_flex}>
-                <h4>
-                  {userData?.user?.fname} {userData?.user?.lname}
-                </h4>
-                <span>Member since '24</span>
-              </div>
-              <div className={styles.top_name_logo}>
-                {capitalizeFirstLetter(userData?.user?.fname)}
-                {capitalizeFirstLetter(userData?.user?.lname)}
-              </div>
+            <div className="flex items-center gap-4">
+              <h1 className="font-bold text-pinks text-lg">Subscription:</h1>
             </div>
           </div>
           <div className={`${styles.top_nav_children} px-5`}>

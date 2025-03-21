@@ -42,3 +42,39 @@ export const GetUserInfo = async (identifier) => {
     };
   }
 };
+
+// change plans
+export const ChangePlans = async (plan_name) => {
+  try {
+    const response = await axios.post(
+      `${URL}/profile/change-plan
+        `,
+      { plan_name },
+      {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      }
+    );
+
+    //console.log("response", getToken());
+
+    // if (!response.data.success) {
+    //   return {
+    //     success: false,
+    //     message: response.data.message || "Failed to fetch",
+    //   };
+    // }
+
+    return {
+      success: true,
+      message: response.data.message || "Fetched successfully",
+      data: response.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};

@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import {
-//   BarChart,
-//   Bar,
-//   Rectangle,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-//   ResponsiveContainer,
-// } from "recharts";
+
 import {
   Table,
   Thead,
@@ -51,6 +41,9 @@ import { Link, useNavigate } from "react-router-dom";
 import PaystackButton from "../../../payments/Paystack";
 import { AxiosInstance } from "../../../config";
 import { GetDashboardInfo } from "../../../api/dashboard";
+import { ChangePlans } from "../../../api/profile";
+import SwitchplanModal from "../../../components/layouts/dashboard/SwitchplanModal";
+import CustomModal from "../../../utility/CustomModal";
 
 function Dashboard() {
   const user_data = JSON.parse(localStorage.getItem("data_user_main"));
@@ -59,7 +52,9 @@ function Dashboard() {
   const [dash_data, setDash_data] = useState(
     JSON.parse(localStorage.getItem("dash_data")) || null
   );
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [payment_step, setPayment_step] = useState(0);
   const [amount, setAmount] = useState("");
   const [zero_contacts, setZero_contacts] = useState(false);
@@ -70,7 +65,22 @@ function Dashboard() {
 
   const modalWidth = useBreakpointValue({ base: "90%", md: "50%" });
 
-  // get dashboard info
+  // Function to open modal
+  const openModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  // Function to close modal
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  // Open modal
+  const openModal1 = () => setIsOpen(true);
+
+  // Close modal
+  const closeModal1 = () => setIsOpen(false);
+
   // get all lists list api
   const getUserData = async () => {
     setIsLoading(true);
@@ -147,14 +157,14 @@ function Dashboard() {
       //console.log("resss", res.data);
       if (res.data.success) {
         setTrxHistory(res.data.data);
-      } else {
-        toast({
-          title: res.data.message,
-          status: "warning",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
+      } //else {
+      //   toast({
+      //     title: res.data.message,
+      //     status: "warning",
+      //     duration: 2000,
+      //     isClosable: true,
+      //   });
+      // }
     } catch (error) {
       setIsLoading(false);
       toast({
@@ -181,6 +191,10 @@ function Dashboard() {
   useEffect(() => {
     getTransactions();
   }, []);
+
+  const handlePlanChange = async () => {
+    await getUserData(); // Refetch dashboard data
+  };
 
   return (
     <DashboardLayout
@@ -210,9 +224,8 @@ function Dashboard() {
             }}
             fontFamily="inherit"
           >
-            {/* <PaystackButton > */}
             <span
-              onClick={onOpen}
+              onClick={openModal1}
               style={{
                 alignSelf: "flex-end",
                 fontSize: "13px",
@@ -230,7 +243,6 @@ function Dashboard() {
                 style={{ marginLeft: "8px", fontSize: "16px" }}
               />
             </span>
-            {/* </PaystackButton> */}
           </Text>
         </div>
         <div className={styles.dashboard_item}>
@@ -238,7 +250,16 @@ function Dashboard() {
           <h1>{info?.totalContactCount}</h1>
         </div>
         <div className={styles.dashboard_item}>
-          <h4>Plan Information</h4>
+          <div className="flex items-center font-poppins text-sm justify-between">
+            <h4>Plan Information</h4>
+
+            <button
+              onClick={openModal}
+              className="cursor-pointer text-pinks font-medium hover:text-pinks/70 duration-300 ease-in-out transition-all"
+            >
+              Switch plan
+            </button>
+          </div>
           <h1>{info?.plan_type}</h1>
           <Text
             style={{
@@ -311,40 +332,6 @@ function Dashboard() {
         </TableContainer>
       </div>
 
-      {/* <div className={styles.dashboard_middle}>
-        <div className={styles.chart_1}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#8884d8"
-                activeBar={<Rectangle fill="pink" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#82ca9d"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      
-      </div> */}
       <AlertDialog
         isOpen={zero_contacts}
         leastDestructiveRef={cancelRef}
@@ -391,28 +378,29 @@ function Dashboard() {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent width={modalWidth}>
-          <ModalHeader>Amount</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="enter amount:"
-            />
-          </ModalBody>
-          <ModalFooter>
-            <PaystackButton
-              isDisabled={amount >= 100 ? false : true}
-              amount={amount}
-              isLoading={isLoading}
-              callback={handleAccountFund}
-            />
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <CustomModal isOpen={isOpen} onClose={closeModal1} title="Amount">
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <div className="mt-4">
+          <PaystackButton
+            isDisabled={amount >= 100 ? false : true}
+            amount={amount}
+            isLoading={isLoading}
+            callback={handleAccountFund}
+          />
+        </div>
+      </CustomModal>
+      {/* switchplan modal */}
+      <SwitchplanModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onPlanChange={handlePlanChange}
+      />
     </DashboardLayout>
   );
 }

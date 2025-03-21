@@ -35,7 +35,7 @@ const TextTwoPayTable = () => {
 
   // Navigate to view stats and pass review data
   const viewStats = (review) => {
-    navigate(`/dashboard/enterprise/${review.token}`, {
+    navigate(`/dashboard/enterprise/payments/${review.token}`, {
       state: { review }, // Pass the entire review object as state
     });
   };

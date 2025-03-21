@@ -4,6 +4,8 @@ import { usePaystackPayment } from "react-paystack";
 
 const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
+console.log("what", userData?.user?.mail);
+
 const PaystackButton = ({ isDisabled, amount, isLoading, callback }) => {
   if (!amount) {
     return (
@@ -14,7 +16,7 @@ const PaystackButton = ({ isDisabled, amount, isLoading, callback }) => {
   }
   const config = {
     reference: new Date().getTime().toString(),
-    email: userData.mail,
+    email: userData?.user?.mail,
     amount: parseInt(amount) * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
     publicKey: import.meta.env.VITE_APP_PAYSTACK_KEY,
   };
@@ -24,7 +26,7 @@ const PaystackButton = ({ isDisabled, amount, isLoading, callback }) => {
     // Implementation for whatever you want to do with reference and after success call.
     return callback({
       status: true,
-      usertoken: userData.usertoken,
+      usertoken: userData?.user?.usertoken,
       amount_paid: amount,
       paystack_ref: reference.reference,
     });
@@ -34,8 +36,8 @@ const PaystackButton = ({ isDisabled, amount, isLoading, callback }) => {
   const onClose = () => {
     return callback({
       status: false,
-      usertoken: userData.usertoken,
-      amount_paid: amount
+      usertoken: userData?.user?.usertoken,
+      amount_paid: amount,
     });
   };
 

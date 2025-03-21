@@ -113,7 +113,7 @@ export const ReviewRedirect = async (token, number) => {
   }
 };
 
-// get review stats redirect page data
+// get review stats
 export const ReviewStats = async (token) => {
   try {
     const response = await axios.get(`${URL}/reviews/statistics/${token}`, {

@@ -26,8 +26,6 @@ const ViewStats = () => {
     fetchData();
   }, [token]);
 
-  //console.log(stat?.feedbacks?.feedback_details);
-
   return (
     <DashboardLayout pageName={"View Stats"}>
       <PageLoader isLoading={loading} />

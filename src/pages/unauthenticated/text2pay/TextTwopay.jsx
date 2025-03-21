@@ -20,6 +20,7 @@ const TextTwopay = () => {
     currency: "NGN",
     email: "",
     name: "",
+    number: "",
     user_id: 0,
     token: "",
   });
@@ -121,6 +122,20 @@ const TextTwopay = () => {
                   <input
                     name="email"
                     value={formdata.email}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-black/25 p-2"
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              {/* phone */}
+              <div>
+                <label htmlFor="">Phone Number</label>
+                <div className="mt-1">
+                  <input
+                    name="number"
+                    value={formdata.number}
                     onChange={handleInputChange}
                     className="w-full bg-white border border-black/25 p-2"
                     type="text"

@@ -8,7 +8,7 @@ function Landing() {
   if (!userData) {
     return <Navigate to="/register" />;
   } else {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboards" />;
   }
 
   // return (

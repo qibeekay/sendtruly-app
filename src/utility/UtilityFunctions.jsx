@@ -11,10 +11,9 @@ export function parsePhoneNumbers(inputString) {
   return validNumbers;
 }
 
-
 export function unparsePhoneNumbers(numbersArray) {
   // Join the array elements using commas
-  const formattedString = numbersArray.join(', ');
+  const formattedString = numbersArray.join(", ");
 
   return formattedString;
 }

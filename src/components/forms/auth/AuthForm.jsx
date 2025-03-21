@@ -110,7 +110,7 @@ function AuthForm({ form, userMail }) {
         });
         localStorage.setItem("data_user_main", JSON.stringify(res.data.data));
         setUserData(res.data.data); // Update state with new user data
-        navigate("/dashboard");
+        navigate("/dashboards");
       } else {
         toast({
           title: res.data.message,
@@ -151,7 +151,7 @@ function AuthForm({ form, userMail }) {
         });
         localStorage.setItem("data_user_main", JSON.stringify(res.data.data));
         setUserData(res.data.data);
-        navigate("/dashboard");
+        navigate("/dashboards");
       } else {
         toast({
           title: res.data.message,

@@ -24,6 +24,8 @@ import Compose from "./pages/authenticated/enterprise-compose/Compose";
 import ReviewsPage from "./pages/unauthenticated/reviews/ReviewsPage";
 import ViewStats from "./pages/authenticated/enterprise/ViewStats";
 import TextTwopay from "./pages/unauthenticated/text2pay/TextTwopay";
+import ViewPayments from "./pages/authenticated/enterprise/ViewPayments";
+import PaymentSuccess from "./pages/unauthenticated/text2pay/PaymentSuccess";
 
 function App() {
   return (
@@ -37,9 +39,10 @@ function App() {
       <Route element={<About />} path="/about" />
       <Route element={<ReviewsPage />} path="/reviews/:reviewId" />
       <Route element={<TextTwopay />} path="/invoice/:token" />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
 
       {/* Authenticated ROutes  */}
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboards" element={<Dashboard />} />
       <Route path="/dashboard/sms" element={<Sms />} />
       <Route path="/dashboard/chats" element={<Chats />} />
       <Route
@@ -70,6 +73,10 @@ function App() {
         }
       />
       <Route path="/dashboard/enterprise/:token" element={<ViewStats />} />
+      <Route
+        path="/dashboard/enterprise/payments/:token"
+        element={<ViewPayments />}
+      />
 
       {/* Verifications  */}
       <Route path="/kyc/:usertoken" element={<Kyc />} />

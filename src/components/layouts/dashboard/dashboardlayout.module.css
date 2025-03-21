@@ -10,7 +10,7 @@
   bottom: 0;
   height: 100vh;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   z-index: 10;
   flex-direction: column;
   background-color: #042f61;
@@ -34,13 +34,13 @@
   width: 150px;
 }
 .dashboard_navigation ul {
-  margin-top: 50px;
+  /* margin-top: 50px; */
   height: 100%;
   width: 100%;
+  background-color: red;
   list-style-type: none;
 }
 .dashboard_navigation li {
-  margin-top: 10px;
   width: 100%;
   white-space: nowrap;
 }
@@ -54,7 +54,6 @@
   text-decoration: none;
   font-weight: 400;
   /* line-height: normal; */
-  padding: 10px;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -81,9 +80,10 @@
   width: 100%;
   min-height: 100vh;
 }*/
-.logout_button {
+
+/* .logout_button {
   margin-top: 70% !important;
-}
+} */
 .logout_button a {
   color: var(--brandcolor) !important;
 }

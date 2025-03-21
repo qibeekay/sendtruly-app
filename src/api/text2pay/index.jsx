@@ -257,3 +257,40 @@ export const GetMessages = async () => {
     };
   }
 };
+
+// get review stats
+export const PaidCustomers = async (token) => {
+  try {
+    const response = await axios.get(
+      `${URL}/invoices/has-paid-invoices/${token}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+
+    console.log("Humor me payment data", response);
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Failed to fetch",
+      };
+    }
+
+    return {
+      success: true,
+      message: response.data.message || "Links fetched successfully",
+      data: response.data.data,
+    };
+  } catch (error) {
+    // Handle network/HTTP errors
+    return {
+      success: false,
+      message:
+        error.response?.data?.message || error.message || "Network error",
+    };
+  }
+};

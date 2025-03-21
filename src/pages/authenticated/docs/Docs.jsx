@@ -104,10 +104,10 @@ function Docs() {
   }
 
   function truncateString(inputString, maxLength) {
-    if (inputString.length <= maxLength) {
+    if (inputString?.length <= maxLength) {
       return inputString;
     } else {
-      return inputString.substring(0, maxLength) + "...";
+      return inputString?.substring(0, maxLength) + "...";
     }
   }
 
@@ -208,10 +208,10 @@ function Docs() {
               fontSize="md"
               fontWeight="400"
             >
-              {truncateString(user_data.api_key, 25)}{" "}
+              {truncateString(user_data?.user?.api_key, 25)}{" "}
               <FaCopy
                 style={{ marginLeft: "8px", cursor: "pointer" }}
-                onClick={() => handleCopy(user_data.api_key)}
+                onClick={() => handleCopy(user_data?.user?.api_key)}
               />
             </Text>
           </Box>
