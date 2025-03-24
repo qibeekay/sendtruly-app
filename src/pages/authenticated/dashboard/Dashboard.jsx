@@ -46,11 +46,10 @@ import SwitchplanModal from "../../../components/layouts/dashboard/SwitchplanMod
 import CustomModal from "../../../utility/CustomModal";
 
 function Dashboard() {
-  const user_data = JSON.parse(localStorage.getItem("data_user_main"));
   const navigate = useNavigate();
   const toast = useToast();
-  const [dash_data, setDash_data] = useState(
-    JSON.parse(localStorage.getItem("dash_data")) || null
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("data_user_main"))
   );
   // const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,6 +61,14 @@ function Dashboard() {
   const [info, setInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const cancelRef = React.useRef();
+
+  // Sync localStorage with state
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("data_user_main"));
+    if (data) {
+      setUserData(data);
+    }
+  }, []);
 
   const modalWidth = useBreakpointValue({ base: "90%", md: "50%" });
 
@@ -84,7 +91,7 @@ function Dashboard() {
   // get all lists list api
   const getUserData = async () => {
     setIsLoading(true);
-    const result = await GetDashboardInfo();
+    const result = await GetDashboardInfo(userData?.token);
     setInfo(result.data);
     setIsLoading(false);
   };
@@ -95,7 +102,7 @@ function Dashboard() {
 
   // handle account funding
   const handleAccountFund = async (payload) => {
-    const payment_data = { ...payload };
+    const payment_data = { ...payload, purpose: "wallet_funding" };
     delete payment_data.status;
 
     setPayment_step((prv) => !prv);
@@ -109,7 +116,7 @@ function Dashboard() {
     }
     setIsLoading(true);
     try {
-      const res = await AxiosInstance.post(
+      const res = await AxiosInstance.get(
         `${import.meta.env.VITE_APP_BASE_URL}/payment/verify-payment`,
         payment_data
       );
@@ -150,7 +157,7 @@ function Dashboard() {
     try {
       const res = await AxiosInstance.post(
         `${import.meta.env.VITE_APP_BASE_URL}/payment/get-payment-history`,
-        { usertoken: user_data.usertoken }
+        { usertoken: userData?.token }
       );
       setIsLoading(false);
 
@@ -199,7 +206,7 @@ function Dashboard() {
   return (
     <DashboardLayout
       pageName="Dashboard"
-      setDash_data={setDash_data}
+      setDash_data={setUserData}
       setZero_contacts={setZero_contacts}
       payment_step={payment_step}
     >
@@ -392,6 +399,7 @@ function Dashboard() {
             amount={amount}
             isLoading={isLoading}
             callback={handleAccountFund}
+            purpose="wallet_funding"
           />
         </div>
       </CustomModal>

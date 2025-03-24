@@ -4,49 +4,67 @@ import { usePaystackPayment } from "react-paystack";
 
 const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
-console.log("what", userData?.user?.mail);
+const PaystackButton = ({
+  isDisabled,
+  amount,
+  isLoading,
+  callback,
+  purpose,
+  fixedAmount,
+  customButton,
+}) => {
+  const paymentAmount = fixedAmount !== undefined ? fixedAmount : amount;
 
-const PaystackButton = ({ isDisabled, amount, isLoading, callback }) => {
-  if (!amount) {
+  if (!paymentAmount && !fixedAmount) {
     return (
       <Button isDisabled={isDisabled} colorScheme="green" size="md">
         Pay
       </Button>
     );
   }
+
   const config = {
     reference: new Date().getTime().toString(),
     email: userData?.user?.mail,
-    amount: parseInt(amount) * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    amount: parseInt(paymentAmount) * 100,
     publicKey: import.meta.env.VITE_APP_PAYSTACK_KEY,
+    metadata: {
+      purpose: purpose || "wallet_funding",
+      name: `${userData?.user?.fname} ${userData?.user?.lname}`,
+    },
   };
 
-  // you can call this function anything
   const onSuccess = (reference) => {
-    // Implementation for whatever you want to do with reference and after success call.
     return callback({
       status: true,
       usertoken: userData?.user?.usertoken,
-      amount_paid: amount,
+      amount_paid: paymentAmount,
       paystack_ref: reference.reference,
+      purpose: purpose,
     });
   };
 
-  // you can call this function anything
   const onClose = () => {
     return callback({
       status: false,
       usertoken: userData?.user?.usertoken,
-      amount_paid: amount,
+      amount_paid: paymentAmount,
+      purpose: purpose,
     });
   };
 
   const initializePayment = usePaystackPayment(config);
+
+  if (customButton) {
+    return React.cloneElement(customButton, {
+      onClick: () => initializePayment(onSuccess, onClose),
+      disabled: isDisabled || isLoading,
+    });
+  }
+
   return (
     <Button
-      onClick={() => {
-        initializePayment(onSuccess, onClose);
-      }}
+      onClick={() => initializePayment(onSuccess, onClose)}
       isLoading={isLoading}
       isDisabled={isDisabled}
       colorScheme="green"

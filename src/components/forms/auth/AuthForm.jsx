@@ -149,9 +149,8 @@ function AuthForm({ form, userMail }) {
           duration: 2000,
           isClosable: true,
         });
-        localStorage.setItem("data_user_main", JSON.stringify(res.data.data));
-        setUserData(res.data.data);
-        navigate("/dashboards");
+
+        navigate("/login");
       } else {
         toast({
           title: res.data.message,

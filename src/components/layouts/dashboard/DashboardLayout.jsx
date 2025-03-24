@@ -1,3 +1,8 @@
+import React, { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { Alert, AlertIcon, useToast } from "@chakra-ui/react";
+import { IoMdClose, IoMdChatbubbles } from "react-icons/io";
+import { HiMenuAlt2 } from "react-icons/hi";
 import styles from "./dashboardlayout.module.css";
 import logo from "../../../assets/lg.png";
 import settings from "../../../assets/settings.png";
@@ -8,26 +13,10 @@ import dash from "../../../assets/dash.png";
 import enterprise from "../../../assets/enterprise.png";
 import email from "../../../assets/email.png";
 import logout from "../../../assets/logout.png";
-import { Link, Navigate } from "react-router-dom";
-
-// icons imports
-import { MdDashboard } from "react-icons/md";
-import { FaMessage } from "react-icons/fa6";
-import { IoMdChatbubbles } from "react-icons/io";
-import { MdContactPage } from "react-icons/md";
-import { RiFileHistoryFill } from "react-icons/ri";
-import { SiReadthedocs } from "react-icons/si";
-import { IoMdSettings } from "react-icons/io";
-import { IoMdLogOut } from "react-icons/io";
-
-import { IoMdClose } from "react-icons/io";
-import { HiMenuAlt2 } from "react-icons/hi";
-import { useEffect, useState } from "react";
-import { Alert, AlertIcon, useToast } from "@chakra-ui/react";
-import { AxiosInstance } from "../../../config";
 import PageLoader from "../../loaders/PageLoader";
-import { GetDashboardInfo } from "../../../api/dashboard";
 import { GetUserInfo } from "../../../api/profile";
+import PaystackButton from "../../../payments/Paystack";
+import { AxiosInstance } from "../../../config";
 
 function DashboardLayout({
   pageName,
@@ -38,23 +27,33 @@ function DashboardLayout({
 }) {
   const [navState, setNavState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState({});
   const currentPath = window.location.href;
-  const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("data_user_main"))
+  );
+  const toast = useToast();
+  const fixedPrice = 30000; // Fixed price for enterprise plan
+
+  // Sync localStorage with state
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("data_user_main"));
+    if (data) {
+      setUserData(data);
+    }
+  }, []);
+
+  console.log("users", userData);
 
   const toggleNav = () => {
     setNavState(!navState);
   };
 
   function capitalizeFirstLetter(inputString) {
-    // Check if the input is a valid string
     if (typeof inputString !== "string" || inputString.length === 0) {
       return "Invalid input";
     }
-
-    // Extract the first letter and capitalize it
-    const firstLetter = inputString.charAt(0).toUpperCase();
-
-    return firstLetter;
+    return inputString.charAt(0).toUpperCase();
   }
 
   if (!userData.token) {
@@ -65,7 +64,7 @@ function DashboardLayout({
   const fetchUserData = async () => {
     setIsLoading(true);
     const result = await GetUserInfo(userData?.user?.usertoken);
-    // setConnected(result?.data?.data?.connected);
+    setData(result?.data?.data);
     setIsLoading(false);
   };
 
@@ -73,7 +72,58 @@ function DashboardLayout({
     fetchUserData();
   }, []);
 
-  // [payment_step, pageName];
+  const handleSubscription = async (payload) => {
+    if (!payload.status) {
+      return toast({
+        title: "Payment Cancelled!",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await AxiosInstance.get(
+        `${import.meta.env.VITE_APP_BASE_URL}/payment/verify-payment`,
+        {
+          usertoken: userData?.user?.usertoken,
+          amount_paid: fixedPrice,
+          paystack_ref: payload.paystack_ref,
+          purpose: "fund_enterprise_plan",
+        }
+      );
+
+      console.log("egbe dike", res);
+
+      if (res.data.success) {
+        toast({
+          title: "Enterprise Plan Subscription Successful!",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        fetchUserData(); // Refresh user data after successful payment
+      } else {
+        toast({
+          title: res.data.message,
+          status: "warning",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: error.response?.data.message || error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.dashboard_container}>
       <div
@@ -281,18 +331,44 @@ function DashboardLayout({
           </div>
         </div>
       </div>
+
       <div className="w-full flex items-center justify-end">
         <div className="w-full lg:w-[calc(100%-250px)] bg-[#f7f5ec] min-h-screen">
           <div className={`${styles.top_nav_container} p-5`}>
             <div className={styles.top_nav_left}>
-              {" "}
-              <HiMenuAlt2 className={styles.icon} onClick={toggleNav} />{" "}
+              <HiMenuAlt2 className={styles.icon} onClick={toggleNav} />
               {pageName}
             </div>
             <div className="flex items-center gap-4">
-              <h1 className="font-bold text-pinks text-lg">Subscription:</h1>
+              <h1 className="font-bold text-pinks text-lg">Subscription: </h1>
+              <div className="text-black font-bold">
+                {data?.plan_type === "Free Trial" ? (
+                  "Free Plan"
+                ) : data?.plan_type === "Standard-Plan" ? (
+                  "Standard Plan"
+                ) : data?.plan_type === "Enterprise-Plan" &&
+                  data?.enterprise_info?.payment_status === "unpaid" ? (
+                  <div className="flex items-center gap-2">
+                    <p className="font-bold">Expired</p>
+                    <PaystackButton
+                      purpose="fund_enterprise_plan"
+                      fixedAmount={fixedPrice}
+                      isLoading={isLoading}
+                      callback={handleSubscription}
+                      customButton={
+                        <button className="bg-pinks px-4 py-1 rounded-[12px] text-white cursor-pointer">
+                          Subscribe
+                        </button>
+                      }
+                    />
+                  </div>
+                ) : (
+                  `Expires in ${data?.enterprise_info?.next_payment_date}`
+                )}
+              </div>
             </div>
           </div>
+
           <div className={`${styles.top_nav_children} px-5`}>
             <PageLoader isLoading={isLoading} />
             {!userData.kyc_status && (

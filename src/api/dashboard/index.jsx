@@ -1,12 +1,14 @@
 import axios from "axios";
 
-const userData = JSON.parse(localStorage.getItem("data_user_main"));
+const getToken = () => {
+  const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  return userData?.token || "";
+};
 
-const bearer = userData?.token;
 const URL = import.meta.env.VITE_APP_BASE_URL;
 
 // get all list
-export const GetDashboardInfo = async () => {
+export const GetDashboardInfo = async (bearer) => {
   try {
     const response = await axios.get(`${URL}/user-dashboard-info`, {
       headers: { Authorization: `Bearer ${bearer}` },
