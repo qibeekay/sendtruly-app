@@ -153,13 +153,13 @@ export const SendPaymentSms = async (userdata) => {
 export const InvoiceRedirect = async (token, number, email) => {
   try {
     const response = await axios.get(
-      `${URL}/invoices/page.redirect/${token}?t=${number}e=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
+      `${URL}/invoices/page.redirect/${token}?t=${number}e=${email}`
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${getToken()}`,
+      //   },
+      // }
     );
 
     //console.log("Redirect data", response);
@@ -191,13 +191,13 @@ export const ActivatePayment = async (userdata) => {
   try {
     const response = await axios.post(
       `${URL}/payment/pay-for-invoice`,
-      userdata,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
+      userdata
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${getToken()}`,
+      //   },
+      // }
     );
 
     //console.log("review response", response);
@@ -271,7 +271,7 @@ export const PaidCustomers = async (token) => {
       }
     );
 
-    console.log("Humor me payment data", response);
+    // console.log("Humor me payment data", response);
 
     if (!response.data.success) {
       return {

@@ -80,13 +80,13 @@ export const GetReviewLinks = async () => {
 export const ReviewRedirect = async (token, number) => {
   try {
     const response = await axios.get(
-      `${URL}/reviews/page.redirect/${token}?t=${number}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
+      `${URL}/reviews/page.redirect/${token}?t=${number}`
+      // {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${getToken()}`,
+      //   },
+      // }
     );
 
     //console.log("Redirect data", response);
@@ -184,12 +184,16 @@ export const SendReviewSms = async (userdata) => {
 // make a review
 export const MakeReview = async (userdata) => {
   try {
-    const response = await axios.post(`${URL}/reviews/user/review`, userdata, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const response = await axios.post(
+      `${URL}/reviews/user/review`,
+      userdata
+      //   {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${getToken()}`,
+      //   },
+      // }
+    );
 
     //console.log("review response", response);
 

@@ -15,8 +15,8 @@ import AuthForm from "../../../components/forms/auth/AuthForm";
 function Settings() {
   const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
-  const fullname = userData.fname + " " + userData.lname;
-  const email = userData.mail;
+  const fullname = userData.user.fname + " " + userData.user.lname;
+  const email = userData.user.mail;
   const phone = userData.phone;
 
   function capitalizeFirstLetter(inputString) {
@@ -63,8 +63,8 @@ function Settings() {
                     <Box className={styles.profiletopcase}>
                       <Box className={styles.profile_coverimg}>
                         <Box className={styles.profileimg}>
-                          {capitalizeFirstLetter(userData.fname)}
-                          {capitalizeFirstLetter(userData.lname)}
+                          {capitalizeFirstLetter(userData.user.fname)}
+                          {capitalizeFirstLetter(userData.user.lname)}
                         </Box>
                       </Box>
                     </Box>

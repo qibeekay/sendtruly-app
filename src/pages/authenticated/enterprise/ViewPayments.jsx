@@ -31,7 +31,7 @@ const ViewPayments = () => {
     fetchData();
   }, [token]);
 
-  console.log(stat);
+  // console.log(stat);
   // Get current items for pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

@@ -43,7 +43,7 @@ function DashboardLayout({
     }
   }, []);
 
-  console.log("users", userData);
+  // console.log("users", userData);
 
   const toggleNav = () => {
     setNavState(!navState);
@@ -94,7 +94,7 @@ function DashboardLayout({
         }
       );
 
-      console.log("egbe dike", res);
+      // console.log("egbe dike", res);
 
       if (res.data.success) {
         toast({
@@ -129,11 +129,11 @@ function DashboardLayout({
       <div
         className={
           navState
-            ? `w-[250px] fixed h-screen z-10 bg-[#042f61] p-4 ${styles.navbar_active}`
-            : `w-[250px] fixed h-screen z-10 bg-[#042f61] hidden lg:block p-4`
+            ? `w-[250px] fixed h-screen overflow-y-scroll z-10 bg-[#042f61] p-4 ${styles.navbar_active}`
+            : `w-[250px] fixed h-screen overflow-y-scroll hide-scroll z-10 bg-[#042f61] hidden lg:block p-4`
         }
       >
-        <div className=" h-full flex flex-col justify-between">
+        <div className=" h-full flex flex-col justify-between gap-y-10">
           <div>
             <div className="flex items-center justify-between">
               <img className="w-[150px]" src={logo} alt="" />
@@ -147,7 +147,7 @@ function DashboardLayout({
             </div>
 
             {/* links */}
-            <ul className="mt-10 font-poppins flex flex-col gap-6">
+            <ul className="mt-10 font-poppins flex flex-col gap-3">
               <li>
                 <Link
                   to="/dashboards"
@@ -221,7 +221,7 @@ function DashboardLayout({
                   </div>
                   Enterprise
                 </Link>
-                <div className=" pl-9 flex flex-col gap-y-4 mt-4">
+                <div className=" pl-9 flex flex-col gap-y-3 mt-3">
                   <div className="">
                     <Link
                       to="/dashboard/enterprise/dashboard"
@@ -284,7 +284,7 @@ function DashboardLayout({
           </div>
 
           {/* settings / profile / logout */}
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
             {/* settings */}
             <div>
               <Link

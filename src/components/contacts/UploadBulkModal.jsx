@@ -119,7 +119,7 @@ const UploadBulkModal = ({ isOpen, onClose, groups }) => {
         isOpen ? "flex" : "hidden"
       }`}
     >
-      <div className="bg-white font-poppins p-7 rounded-[10px] w-[30rem]">
+      <div className="bg-white h-[35rem] overflow-y-scroll font-poppins p-7 rounded-[10px] w-[30rem] hide-scroll">
         <div>
           {/* Close button */}
           <button className="w-full flex justify-end mb-4" onClick={onClose}>
