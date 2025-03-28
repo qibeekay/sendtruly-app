@@ -82,14 +82,14 @@ const SwitchplanModal = ({ isOpen, onClose, onPlanChange }) => {
             <HiX size={25} />
           </button>
 
-          <h1 className="text-[24px]">Switch Plans</h1>
+          <h1 className="text-[24px] font-bold">Switch Plans</h1>
         </div>
 
         {/* Plan selection */}
         <div className="mt-6">
           <div className="flex flex-col gap-4">
             {/* Free Plan */}
-            <button
+            {/* <button
               className={`p-4 border rounded-lg text-left ${
                 selectedPlan === "Free Trial"
                   ? "border-blue-500 bg-blue-50"
@@ -101,7 +101,7 @@ const SwitchplanModal = ({ isOpen, onClose, onPlanChange }) => {
               <p className="text-sm text-gray-600">
                 Ideal for individuals and small teams.
               </p>
-            </button>
+            </button> */}
 
             {/* Standard Plan */}
             <button
