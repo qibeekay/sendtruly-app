@@ -26,6 +26,7 @@ import ViewStats from "./pages/authenticated/enterprise/ViewStats";
 import TextTwopay from "./pages/unauthenticated/text2pay/TextTwopay";
 import ViewPayments from "./pages/authenticated/enterprise/ViewPayments";
 import PaymentSuccess from "./pages/unauthenticated/text2pay/PaymentSuccess";
+import Email from "./pages/authenticated/email/Email";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
       {/* Authenticated ROutes  */}
       <Route path="/dashboards" element={<Dashboard />} />
       <Route path="/dashboard/sms" element={<Sms />} />
+      <Route path="/dashboard/email" element={<Email />} />
       <Route path="/dashboard/chats" element={<Chats />} />
       <Route
         path="/dashboard/contacts"

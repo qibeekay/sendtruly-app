@@ -84,7 +84,7 @@ function DashboardLayout({
 
     setIsLoading(true);
     try {
-      const res = await AxiosInstance.get(
+      const res = await AxiosInstance.post(
         `${import.meta.env.VITE_APP_BASE_URL}/payment/verify-payment`,
         {
           usertoken: userData?.user?.usertoken,
@@ -94,11 +94,9 @@ function DashboardLayout({
         }
       );
 
-      // console.log("egbe dike", res);
-
       if (res.data.success) {
         toast({
-          title: "Enterprise Plan Subscription Successful!",
+          title: res.data.message || "Account funded successfully",
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -340,7 +338,9 @@ function DashboardLayout({
               {pageName}
             </div>
             <div className="flex items-center gap-4">
-              <h1 className="font-bold text-pinks text-lg">Subscription: </h1>
+              <h1 className="font-bold text-pinks text-lg hidden md:block">
+                Subscription:{" "}
+              </h1>
               <div className="text-black font-bold">
                 {data?.plan_type === "Free Trial" ? (
                   "Free Plan"
@@ -349,7 +349,7 @@ function DashboardLayout({
                 ) : data?.plan_type === "Enterprise-Plan" &&
                   data?.enterprise_info?.payment_status === "unpaid" ? (
                   <div className="flex items-center gap-2">
-                    <p className="font-bold">Expired</p>
+                    <p className="font-bold hidden md:block">Expired</p>
                     <PaystackButton
                       purpose="fund_enterprise_plan"
                       fixedAmount={fixedPrice}

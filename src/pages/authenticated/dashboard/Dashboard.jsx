@@ -41,7 +41,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PaystackButton from "../../../payments/Paystack";
 import { AxiosInstance } from "../../../config";
 import { GetDashboardInfo } from "../../../api/dashboard";
-import { ChangePlans } from "../../../api/profile";
+import { ChangePlans, GetUserInfo } from "../../../api/profile";
 import SwitchplanModal from "../../../components/layouts/dashboard/SwitchplanModal";
 import CustomModal from "../../../utility/CustomModal";
 
@@ -57,6 +57,7 @@ function Dashboard() {
   const [payment_step, setPayment_step] = useState(0);
   const [amount, setAmount] = useState("");
   const [zero_contacts, setZero_contacts] = useState(false);
+  const [data, setData] = useState({});
   const [trxHistory, setTrxHistory] = useState([]);
   const [info, setInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -88,6 +89,14 @@ function Dashboard() {
   // Close modal
   const closeModal1 = () => setIsOpen(false);
 
+  // Fetch user data
+  const fetchUserData = async () => {
+    setIsLoading(true);
+    const result = await GetUserInfo(userData?.user?.usertoken);
+    setData(result?.data?.data);
+    setIsLoading(false);
+  };
+
   // get all lists list api
   const getUserData = async () => {
     setIsLoading(true);
@@ -98,6 +107,7 @@ function Dashboard() {
 
   useEffect(() => {
     getUserData();
+    fetchUserData();
   }, []);
 
   // handle account funding
@@ -116,25 +126,26 @@ function Dashboard() {
     }
     setIsLoading(true);
     try {
-      const res = await AxiosInstance.get(
+      const res = await AxiosInstance.post(
         `${import.meta.env.VITE_APP_BASE_URL}/payment/verify-payment`,
         payment_data
       );
       setIsLoading(false);
 
       if (res.data.success) {
-        getTransactions();
+        setIsOpen(false);
         setPayment_step((prv) => !prv);
-        onClose();
         toast({
-          title: "Account Credited Successfully!",
+          title: res.data.message || "Account funded successfully",
           status: "success",
           duration: 2000,
           isClosable: true,
         });
+        getUserData();
+        getTransactions();
       } else {
         toast({
-          title: res.data.message,
+          title: res.data.message || "Error Funding wallet",
           status: "warning",
           duration: 2000,
           isClosable: true,
@@ -262,7 +273,7 @@ function Dashboard() {
 
             <button
               onClick={openModal}
-              className="cursor-pointer text-pinks font-medium hover:text-pinks/70 duration-300 ease-in-out transition-all"
+              className="cursor-pointer text-pinks font-bold hover:text-pinks/70 duration-300 ease-in-out transition-all"
             >
               Switch plan
             </button>
@@ -290,7 +301,7 @@ function Dashboard() {
                 padding: "4px",
               }}
             >
-              {<>{`${parseInt(info?.totalSmsCount)} sms remaining`}</>}
+              <>{data?.sms_count} sms remaining</>
             </span>
             {/* </PaystackButton> */}
           </Text>
