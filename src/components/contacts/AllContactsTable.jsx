@@ -75,14 +75,14 @@ const AllContactsTable = () => {
 
   return (
     <div className="bg-white min-h-screen w-full llg:w-[80%] rounded-[10px]">
-      <div className="p-[4rem]">
-        <div className="flex items-center justify-between">
+      <div className="p-4 md:p-[4rem]">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="font-semibold text-[24px] pb-2">Contacts</h1>
             <p>An overview of your contact contacts</p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}

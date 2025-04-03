@@ -66,17 +66,17 @@ const CreateGroup = ({ setmodal }) => {
 
   return (
     <div className="bg-white min-h-screen w-full llg:w-[80%] rounded-[10px]">
-      <div className="p-[4rem]">
-        <div className="flex items-center justify-between">
+      <div className="p-4 md:p-[4rem]">
+        <div className="flex gap-4 items-center justify-between flex-wrap">
           <div>
             <h1 className="font-semibold text-[24px] pb-2">Contact Groups</h1>
             <p>An overview of your contact groups</p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap ">
             <button
               onClick={openModal1}
-              className="border border-pinks rounded-[10px] text-pinks px-6 py-4 bg-white hover:bg-pinks/10 duration-300 ease-in-out"
+              className="border border-pinks rounded-[10px] text-pinks px-2 md:px-6 py-4 bg-white hover:bg-pinks/10 duration-300 ease-in-out text-sm md:text-base"
             >
               Upload bulk Contacts
             </button>
