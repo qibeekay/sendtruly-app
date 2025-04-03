@@ -33,7 +33,7 @@ function DashboardLayout({
     JSON.parse(localStorage.getItem("data_user_main"))
   );
   const toast = useToast();
-  const fixedPrice = 30000; // Fixed price for enterprise plan
+  const fixedPrice = 35000; // Fixed price for enterprise plan
 
   // Sync localStorage with state
   useEffect(() => {
