@@ -66,6 +66,7 @@ const SwitchplanModal = ({ isOpen, onClose, onPlanChange }) => {
       onPlanChange(); // Call the callback function to refetch dashboard data
       fetchUserData();
       onClose(); // Close the modal on success
+      window.location.reload();
     }
   };
 
