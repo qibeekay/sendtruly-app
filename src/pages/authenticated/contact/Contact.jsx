@@ -90,9 +90,6 @@ function Contact() {
             overflowX="auto" // Enable horizontal scrolling
             whiteSpace="nowrap"
           >
-            {/* <Tab onClick={() => setChangeState(changeState + 1)}>
-              Manage lists
-            </Tab> */}
             <Tab>Contact Groups</Tab>
             <Tab>Contacts</Tab>
           </TabList>
@@ -105,29 +102,6 @@ function Contact() {
             </TabPanel>
             <TabPanel>
               <AllContactsTable />
-              {/* <div className={styles.tab_format_container}>
-                <Text mt={4} as="h6" size="sm">
-                  Upload format (select a csv file, each line should contain
-                  phone number)
-                </Text>
-                <a
-                  href={"https://app.sendtruly.com/contacts_sample.csv"}
-                  download="contacts_sample.csv"
-                >
-                  <Button
-                    width={"100%"}
-                    size="md"
-                    colorScheme="blue"
-                    border="1px"
-                    mt="24px"
-                    variant="outline"
-                    // onClick={handleDownload}
-                  >
-                    Download csv format
-                  </Button>
-                </a>
-                <ContactForm />
-              </div> */}
             </TabPanel>
           </TabPanels>
         </Tabs>

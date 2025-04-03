@@ -338,18 +338,20 @@ function DashboardLayout({
               {pageName}
             </div>
             <div className="flex items-center gap-4">
-              <h1 className="font-bold text-pinks text-lg hidden md:block">
+              <h1 className="font-bold text-pinks text-xs sm:text-lg hidden md:block">
                 Subscription:{" "}
               </h1>
               <div className="text-black font-bold">
                 {data?.plan_type === "Free Trial" ? (
                   "Free Plan"
                 ) : data?.plan_type === "Standard-Plan" ? (
-                  "Standard Plan"
+                  <p className="text-xs sm:text-lg">Standard Plan</p>
                 ) : data?.plan_type === "Enterprise-Plan" &&
                   data?.enterprise_info?.payment_status === "unpaid" ? (
                   <div className="flex items-center gap-2">
-                    <p className="font-bold hidden md:block">Expired</p>
+                    <p className="font-bold hidden md:block text-xs sm:text-lg">
+                      Expired
+                    </p>
                     <PaystackButton
                       purpose="fund_enterprise_plan"
                       fixedAmount={fixedPrice}
@@ -363,7 +365,9 @@ function DashboardLayout({
                     />
                   </div>
                 ) : (
-                  `Expires in ${data?.enterprise_info?.next_payment_date}`
+                  <p className="text-xs sm:text-lg">
+                    Expires in {data?.enterprise_info?.next_payment_date}
+                  </p>
                 )}
               </div>
             </div>

@@ -73,7 +73,7 @@ const StatsTable = ({ details = [], isLoading }) => {
                         {stats?.comment}
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {stats?.review_ratings}
+                        {stats?.review_ratings}/5
                       </td>
                       <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                         {stats?.created_at}

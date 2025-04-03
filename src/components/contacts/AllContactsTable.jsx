@@ -78,15 +78,17 @@ const AllContactsTable = () => {
       <div className="p-4 md:p-[4rem]">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="font-semibold text-[24px] pb-2">Contacts</h1>
-            <p>An overview of your contact contacts</p>
+            <h1 className="font-semibold text-lg sm:text-[24px] pb-2">
+              Contacts
+            </h1>
+            <p className="text-sm sm:text-base">An overview of your contacts</p>
           </div>
 
           <div className="flex items-center gap-4 flex-wrap">
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="border border-gray-300 rounded-md px-6 py-4 flex items-center gap-2 bg-white hover:bg-gray-100"
+                className="border border-gray-300 rounded-md px-4 py-2 sm:px-6 sm:py-4 flex items-center gap-2 bg-white hover:bg-gray-100 w-full text-sm md:text-base"
               >
                 {selectedListToken === null
                   ? "All"
@@ -131,7 +133,7 @@ const AllContactsTable = () => {
             </div>
             <button
               //   onClick={setmodal}
-              className="border border-pinks rounded-[10px] text-white px-6 py-4 bg-pinks hover:bg-pinks/80 duration-300 ease-in-out"
+              className="border border-pinks rounded-[10px] text-white px-4 py-2 sm:px-6 sm:py-4 bg-pinks text-sm md:text-base hover:bg-pinks/80 duration-300 ease-in-out"
             >
               Add Contacts
             </button>

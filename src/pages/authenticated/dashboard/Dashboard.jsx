@@ -225,47 +225,31 @@ function Dashboard() {
       <div className={styles.dashboard_top}>
         <div className={styles.dashboard_item}>
           <h4>Account Balance</h4>
-          <h1>
-            <FaNairaSign className={styles.icon} />
+          <h1 className="text-lg xs:text-3xl">
+            <FaNairaSign />
             {parseInt(info?.account_balance).toLocaleString("en-US", {
               style: "decimal",
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
           </h1>
-          <Text
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-            fontFamily="inherit"
-          >
+          <div className="w-full flex justify-end">
             <span
+              className="flex flex-row-reverse items-center gap-2 font-bold text-pinks"
               onClick={openModal1}
-              style={{
-                alignSelf: "flex-end",
-                fontSize: "13px",
-                fontWeight: "700",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fc1e65",
-                padding: "4px",
-                cursor: "pointer",
-              }}
             >
               Fund Wallet{" "}
               <IoMdAddCircleOutline
                 style={{ marginLeft: "8px", fontSize: "16px" }}
               />
             </span>
-          </Text>
+          </div>
         </div>
         <div className={styles.dashboard_item}>
           <h4>Total Contacts</h4>
-          <h1>{info?.totalContactCount}</h1>
+          <h1 className="text-lg xs:text-4xl pt-4">
+            {info?.totalContactCount}
+          </h1>
         </div>
         <div className={styles.dashboard_item}>
           <div className="flex items-center font-poppins text-sm justify-between">
@@ -278,33 +262,14 @@ function Dashboard() {
               Switch plan
             </button>
           </div>
-          <h1>{info?.plan_type}</h1>
-          <Text
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-            fontFamily="inherit"
-          >
+          <h1 className="text-lg xs:text-3xl">{info?.plan_type}</h1>
+          <div className="w-full flex justify-end">
             {/* <PaystackButton > */}
-            <span
-              style={{
-                alignSelf: "flex-end",
-                fontSize: "13px",
-                fontWeight: "700",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fc1e65",
-                padding: "4px",
-              }}
-            >
-              <>{data?.sms_count} sms remaining</>
+            <span className="text-sm text-pinks font-bold">
+              {data?.sms_count} sms remaining
             </span>
             {/* </PaystackButton> */}
-          </Text>
+          </div>
         </div>
       </div>
       <div className={styles.dashboard_middle}>
