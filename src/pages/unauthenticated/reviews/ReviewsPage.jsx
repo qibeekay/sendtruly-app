@@ -76,7 +76,7 @@ const ReviewsPage = () => {
     fetchData();
   }, [reviewId, number]);
 
-  //console.log(formData);
+  console.log("hiiiiii", review?.review_info?.link);
 
   // Function to submit review
   const SubmitReview = async (e) => {
@@ -101,6 +101,13 @@ const ReviewsPage = () => {
     // Show success modal if review submission is successful
     if (result.success) {
       setShowSuccessModal(true);
+
+      // Check link_type and navigate accordingly
+      if (review?.review_info?.link_type === "external") {
+        window.location.href = review?.review_info?.link; // Navigate to external URL
+      } else {
+        window.location.href = "https://sendtruly.com/"; // Navigate to internal URL
+      }
     }
   };
 
