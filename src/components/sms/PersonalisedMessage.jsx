@@ -313,7 +313,7 @@ const PersonalisedMessage = () => {
               required
             >
               {/* <option value="0">Flash Text</option> */}
-              <option value="1">Flash Plian Text</option>
+              <option value="1">Flash Plain Text</option>
               <option value="2">Unicode SMS</option>
               <option value="6">Unicode Flash SMS</option>
             </Select>
