@@ -10,7 +10,8 @@ const Addlinks = () => {
 
   // formdata the api expects
   const [formData, setFormData] = useState({
-    link_name: "Google", // Default to Google
+    link_platform_type: "Google", // Default to Google
+    link_name: "",
     link: "",
     reaction_type: "emoji", // Default to emoji
     texts: "",
@@ -106,9 +107,9 @@ const Addlinks = () => {
                   <label htmlFor="">Choose a website</label>
                   <div>
                     <select
-                      name="link_name"
+                      name="link_platform_type"
                       className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
-                      value={formData.link_name}
+                      value={formData.link_platform_type}
                       onChange={handleInputChange}
                     >
                       <option value="Google">Google</option>
@@ -118,8 +119,22 @@ const Addlinks = () => {
                   </div>
                 </div>
 
+                {/* link name*/}
+                <div>
+                  <label htmlFor="">Link Name</label>
+                  <input
+                    type="text"
+                    className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
+                    placeholder="Enter your link name"
+                    name="link_name"
+                    value={formData.link_name}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
                 {/* review link */}
                 <div>
+                  <label htmlFor="">Link Url</label>
                   <input
                     type="text"
                     className="w-full h-[45px] rounded-[10px] border border-black/25 px-7 outline-none"
