@@ -4,6 +4,7 @@ import { GetAllList } from "../../../api/contact";
 import { useTabContext } from "../../../utility/TabContext";
 import { GetReviewLinks, SendReviewSms } from "../../../api/reviews";
 import { GetPaymentLinks, SendPaymentSms } from "../../../api/text2pay";
+import { useNavigate } from "react-router-dom";
 
 const EnterpriseCompose = () => {
   const [groups, setGroups] = useState([]);
@@ -12,7 +13,9 @@ const EnterpriseCompose = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [selectedListTokens, setSelectedListTokens] = useState("");
+  const [showNoContactsModal, setShowNoContactsModal] = useState(false);
   const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  const navigate = useNavigate();
 
   // Handles tabs
   const { activeTab, setTab } = useTabContext();
@@ -52,6 +55,11 @@ const EnterpriseCompose = () => {
       const result = await GetAllList();
       setGroups(result.data);
       setIsLoading(false);
+
+      // Show modal if no contacts exist
+      if (result.data.length === 0) {
+        setShowNoContactsModal(true);
+      }
     };
     getAllList();
   }, []);
@@ -141,6 +149,25 @@ const EnterpriseCompose = () => {
   // Function to send SMS based on selected link or invoice
   const sendSms = async (e) => {
     e.preventDefault();
+
+    // Check if user has any contact lists
+    if (groups.length === 0) {
+      setShowNoContactsModal(true);
+      return;
+    }
+
+    // Check if a contact list is selected
+    if (!selectedListTokens) {
+      toast({
+        title: "Error",
+        description: "Please select a contact list to send to.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setLoading(true);
 
     let result;
@@ -163,7 +190,6 @@ const EnterpriseCompose = () => {
       return;
     }
 
-    //console.log("SMS result:", result);
     toast({
       title: result.success ? "Success!" : "Error occurred",
       description: result.message,
@@ -198,6 +224,36 @@ const EnterpriseCompose = () => {
 
   return (
     <div>
+      {/* No Contacts Modal */}
+      {showNoContactsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">No Contacts Found</h2>
+            <p className="mb-6">
+              You need to create a contact list before you can send messages.
+              Would you like to create one now?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowNoContactsModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowNoContactsModal(false);
+                  navigate("/dashboard/contacts");
+                }}
+                className="px-4 py-2 bg-pinks text-white rounded-md"
+              >
+                Create Contacts
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="">
         {/* Form */}
         <form action="" className="w-full flex flex-col gap-4">
@@ -223,11 +279,26 @@ const EnterpriseCompose = () => {
             {/* Contacts List */}
             <div className="w-full md:w-[30rem]">
               <div className="bg-white p-4 rounded-[10px]">
-                <h1>Add from list and group</h1>
+                <div className="flex justify-between items-center">
+                  <h1>Add from list and group</h1>
+                  {groups.length === 0 && (
+                    <button
+                      type="button"
+                      onClick={() => navigate("/dashboard/contacts")}
+                      className="text-pinks underline text-sm"
+                    >
+                      Create Contacts
+                    </button>
+                  )}
+                </div>
 
                 <div className="flex flex-col gap-2 mt-5">
                   {isLoading ? (
                     <div>Loading...</div>
+                  ) : groups.length === 0 ? (
+                    <div className="text-gray-500">
+                      No contact lists available. Please create one first.
+                    </div>
                   ) : (
                     groups?.map((group) => (
                       <div
@@ -393,6 +464,7 @@ const EnterpriseCompose = () => {
             <button
               className="border border-black/25 rounded-[10px] p-4 cursor-pointer bg-pinks text-white text-lg w-full md:w-[653px]"
               onClick={sendSms}
+              disabled={groups.length === 0}
             >
               {Loading ? "Loading..." : "Send message"}
             </button>
