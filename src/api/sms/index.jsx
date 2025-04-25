@@ -4,10 +4,9 @@ const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
 console.log("MyData", userData);
 
-console.log(us);
-
 const bearer = userData?.token;
 const URL = import.meta.env.VITE_APP_BASE_URL;
+console.log(bearer);
 
 // get estimated cost
 export const GetEstimate = async (userdata) => {
