@@ -115,8 +115,6 @@ export const GetSentMessage = async () => {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    console.log("e kaaro", bearer);
-
     if (!response.data.success) {
       return {
         success: false,
@@ -218,10 +216,6 @@ export const GetScheduledSms = async () => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-
-    //console.log(response.data);
-    console.log("e kaaro", bearer);
-
     return {
       data: response.data,
     };

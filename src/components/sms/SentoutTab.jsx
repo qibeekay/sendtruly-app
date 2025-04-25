@@ -26,16 +26,19 @@ const SentoutTab = () => {
     const getReport = async () => {
       setIsLoading(true);
       const result = await GetSentMessage();
-      setResults(result.data);
+      setResults(result?.data);
+      console.log("results", result);
       setIsLoading(false);
     };
     getReport();
   }, []);
 
+  console.log(results);
+
   // Get current items for pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentResults = results.slice(indexOfFirstItem, indexOfLastItem);
+  const currentResults = results?.slice(indexOfFirstItem, indexOfLastItem);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
