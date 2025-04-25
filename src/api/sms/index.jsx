@@ -2,6 +2,10 @@ import axios from "axios";
 
 const userData = JSON.parse(localStorage.getItem("data_user_main"));
 
+console.log("MyData", userData);
+
+console.log(us);
+
 const bearer = userData?.token;
 const URL = import.meta.env.VITE_APP_BASE_URL;
 
@@ -111,7 +115,7 @@ export const GetSentMessage = async () => {
       headers: { Authorization: `Bearer ${bearer}` },
     });
 
-    //console.log("e kaaro", response);
+    console.log("e kaaro", bearer);
 
     if (!response.data.success) {
       return {
@@ -143,6 +147,7 @@ export const GetDeliveryReport = async () => {
     });
 
     //console.log(response);
+    console.log("e kaaro", bearer);
 
     if (!response.data.status) {
       return {
@@ -180,6 +185,7 @@ export const GetSingleReport = async (userdata) => {
     );
 
     //console.log(response.data.status);
+    console.log("e kaaro", bearer);
 
     if (!response.data.status) {
       return {
@@ -214,6 +220,7 @@ export const GetScheduledSms = async () => {
     });
 
     //console.log(response.data);
+    console.log("e kaaro", bearer);
 
     return {
       data: response.data,
