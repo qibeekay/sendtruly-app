@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const userData = JSON.parse(localStorage.getItem("data_user_main"));
+const getToken = () => {
+  const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  return userData?.token || "";
+};
 
-console.log("MyData", userData);
-
-const bearer = userData?.token;
 const URL = import.meta.env.VITE_APP_BASE_URL;
-console.log(bearer);
+
+console.log("Mt token", getToken);
 
 // get estimated cost
 export const GetEstimate = async (userdata) => {
@@ -14,7 +15,7 @@ export const GetEstimate = async (userdata) => {
     const response = await axios.post(`${URL}/cost/estimate-cost`, userdata, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${bearer}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
 
@@ -46,7 +47,7 @@ export const SendSms = async (userdata) => {
     const response = await axios.post(`${URL}/sms/send-sms`, userdata, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${bearer}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
 
@@ -80,7 +81,7 @@ export const SendPersonalisedSms = async (userdata) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       }
     );
@@ -111,7 +112,7 @@ export const SendPersonalisedSms = async (userdata) => {
 export const GetSentMessage = async () => {
   try {
     const response = await axios.get(`${URL}/sms/get-sent-messages`, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     console.log("e kaaro", bearer);
@@ -142,7 +143,7 @@ export const GetSentMessage = async () => {
 export const GetDeliveryReport = async () => {
   try {
     const response = await axios.get(`${URL}/sms/delivery-report`, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     //console.log(response);
@@ -178,7 +179,7 @@ export const GetSingleReport = async (userdata) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       }
     );
@@ -214,7 +215,7 @@ export const GetScheduledSms = async () => {
     const response = await axios.get(`${URL}/sms/get-scheduled-messages`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${bearer}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
 

@@ -11,7 +11,7 @@ const URL = import.meta.env.VITE_APP_BASE_URL;
 export const GetDashboardInfo = async (bearer) => {
   try {
     const response = await axios.get(`${URL}/user-dashboard-info`, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     //console.log(response);

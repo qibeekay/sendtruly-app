@@ -1,15 +1,17 @@
 import axios from "axios";
 
-const userData = JSON.parse(localStorage.getItem("data_user_main"));
+const getToken = () => {
+  const userData = JSON.parse(localStorage.getItem("data_user_main"));
+  return userData?.token || "";
+};
 
-const bearer = userData?.token;
 const URL = import.meta.env.VITE_APP_BASE_URL;
 
 // create list
 export const CreateList = async (userdata) => {
   try {
     const response = await axios.post(`${URL}/contact/create-list`, userdata, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     if (!response.data.status) {
@@ -38,7 +40,7 @@ export const CreateList = async (userdata) => {
 export const GetAllList = async () => {
   try {
     const response = await axios.get(`${URL}/contact/get-all-lists`, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     //console.log(response.data.data);
@@ -72,7 +74,7 @@ export const AddUserToList = async (userdata) => {
       `${URL}/contact/add-contact-to-list`,
       userdata,
       {
-        headers: { Authorization: `Bearer ${bearer}` },
+        headers: { Authorization: `Bearer ${getToken()}` },
       }
     );
 
@@ -102,7 +104,7 @@ export const AddUserToList = async (userdata) => {
 export const GetAllContacts = async () => {
   try {
     const response = await axios.get(`${URL}/contact/get-all-contacts`, {
-      headers: { Authorization: `Bearer ${bearer}` },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
     //console.log(response.data.data);
@@ -136,7 +138,7 @@ export const GetContactsByToken = async (userdata) => {
       `${URL}/contact/get-list-by-token`,
       userdata,
       {
-        headers: { Authorization: `Bearer ${bearer}` },
+        headers: { Authorization: `Bearer ${getToken()}` },
       }
     );
 
@@ -169,7 +171,7 @@ export const UploadBulkContact = async (userdata) => {
       `${URL}/contact/bulk-upload-contacts`,
       userdata,
       {
-        headers: { Authorization: `Bearer ${bearer}` },
+        headers: { Authorization: `Bearer ${getToken()}` },
       }
     );
 
@@ -201,7 +203,7 @@ export const DeleteGroup = async (userdata) => {
       `${URL}/contact/delete-user-list`,
       userdata,
       {
-        headers: { Authorization: `Bearer ${bearer}` },
+        headers: { Authorization: `Bearer ${getToken()}` },
       }
     );
 
