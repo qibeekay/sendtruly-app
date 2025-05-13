@@ -8,7 +8,7 @@ const getToken = () => {
 const URL = import.meta.env.VITE_APP_BASE_URL;
 
 // get all list
-export const GetDashboardInfo = async (bearer) => {
+export const GetDashboardInfo = async () => {
   try {
     const response = await axios.get(`${URL}/user-dashboard-info`, {
       headers: { Authorization: `Bearer ${getToken()}` },

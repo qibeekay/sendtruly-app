@@ -373,21 +373,23 @@ function DashboardLayout({
             </div>
           </div>
 
-          <div className={`${styles.top_nav_children} px-5`}>
+          <div className={`${styles.top_nav_children} `}>
             <PageLoader isLoading={isLoading} />
             {!userData.kyc_status && (
-              <Alert status="warning" my={"20px"}>
-                <AlertIcon />
-                <Link
-                  to={{
-                    pathname: `/kyc/${userData?.user?.usertoken}`,
-                    state: { data: { state: true } },
-                  }}
-                >
-                  {" "}
-                  Click to complete kyc and enjoy full access to our services{" "}
-                </Link>
-              </Alert>
+              <div className="px-4">
+                <Alert status="warning" my={"20px"}>
+                  <AlertIcon />
+                  <Link
+                    to={{
+                      pathname: `/kyc/${userData?.user?.usertoken}`,
+                      state: { data: { state: true } },
+                    }}
+                  >
+                    {" "}
+                    Click to complete kyc and enjoy full access to our services{" "}
+                  </Link>
+                </Alert>
+              </div>
             )}
             {children}
           </div>

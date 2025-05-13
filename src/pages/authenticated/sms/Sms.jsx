@@ -94,35 +94,37 @@ function Sms() {
         </AlertDialog>
         <Tabs
           colorScheme="blue"
-          style={{ marginTop: "30px" }}
+          style={{ marginTop: "10px" }}
           index={changeState}
           variant="unstyled"
           onChange={(index) => setChangeState(index)}
         >
-          <TabList
-            overflowX="auto" // Enable horizontal scrolling
-            whiteSpace="nowrap"
-            className={`${styles.list} hide-scroll`}
-          >
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Compose SMS
-            </Tab>
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Personalise message
-            </Tab>
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Scheduled SMS
-            </Tab>
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Sent Messages
-            </Tab>
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Message History
-            </Tab>
-            <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
-              Drafts
-            </Tab>
-          </TabList>
+          <div className="px-4">
+            <TabList
+              overflowX="auto" // Enable horizontal scrolling
+              whiteSpace="nowrap"
+              className={`${styles.list} hide-scroll`}
+            >
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Compose SMS
+              </Tab>
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Personalise message
+              </Tab>
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Scheduled SMS
+              </Tab>
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Sent Messages
+              </Tab>
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Message History
+              </Tab>
+              <Tab _selected={{ color: "#FF3C78", fontWeight: "bold" }}>
+                Drafts
+              </Tab>
+            </TabList>
+          </div>
           <TabPanels>
             <TabPanel>
               <ComposeSms />

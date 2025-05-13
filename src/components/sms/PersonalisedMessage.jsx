@@ -23,9 +23,9 @@ const PersonalisedMessage = () => {
     message: "",
     contacts: [],
     contact_numbers: [],
-    message_type: "",
+    message_type: "1",
     is_drafted: false,
-    delivery_route: "",
+    delivery_route: "3",
     scheduled: false,
     scheduled_data: { schedule_type: "Daily", scheduled_number: "1" },
     sms_cost: 0,
@@ -189,10 +189,12 @@ const PersonalisedMessage = () => {
             <div className="w-full flex flex-col gap-4">
               {/* sender-id */}
               <div>
-                <label htmlFor="sender_id">Sender ID</label>
+                <label htmlFor="sender_id" className="text-sm sm:text-base">
+                  Sender ID
+                </label>
                 <div>
                   <input
-                    className="w-full p-4 border border-black/25 rounded-lg"
+                    className="w-full p-2 border border-black/25 rounded-lg"
                     type="text"
                     name="sender_id"
                     value={bulkSmsData.sender_id}
@@ -204,14 +206,16 @@ const PersonalisedMessage = () => {
 
               {/* phone Numbers */}
               <div>
-                <label htmlFor="phone-number">Phone numbers</label>
+                <label htmlFor="phone-number" className="text-sm sm:text-base">
+                  Phone numbers
+                </label>
                 <textarea
                   value={manualInput}
                   onChange={handleManualInputChange}
                   placeholder="Enter numbers separated by comma, space or semicolon"
-                  className="resize-none border border-black/25 p-4 w-full h-[272px] rounded-[10px]"
+                  className="resize-none border border-black/25 p-2 w-full h-[100px] rounded-[10px]"
                 />
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex items-center justify-between text-sm sm:text-base">
                   <p>From Groups: {bulkSmsData.contacts.length}</p>
                   <p>Manual Entries: {bulkSmsData.contact_numbers.length}</p>
                 </div>
@@ -219,9 +223,11 @@ const PersonalisedMessage = () => {
             </div>
 
             {/* contacts list */}
-            <div className="w-full md:w-[30rem]">
+            <div className="w-full md:w-[40rem]">
               <div className=" bg-white p-4 rounded-[10px]">
-                <h1>Add from list and group</h1>
+                <h1 className="text-sm sm:text-base">
+                  Add from list and group
+                </h1>
 
                 <div className="flex flex-col gap-2 mt-5">
                   {isLoading ? (
@@ -257,12 +263,14 @@ const PersonalisedMessage = () => {
           </div>
 
           {/* messages / empty fields */}
-          <div className="flex flex-col md:flex-row gap-10">
+          <div className="flex flex-col md:flex-row gap-10 md:items-center">
             {/* messages */}
             <div className="w-full">
-              <label htmlFor="message">Message</label>
+              <label htmlFor="message" className="text-sm sm:text-base">
+                Message
+              </label>
               <div>
-                <div className="border border-black/25 rounded-t-[10px] p-4 w-full h-[57px] bg-pinks"></div>
+                <div className="border border-black/25 rounded-t-[10px] p-4 w-full h-[27px] bg-pinks"></div>
                 <textarea
                   name="message"
                   value={bulkSmsData.message}
@@ -277,7 +285,7 @@ const PersonalisedMessage = () => {
                   }}
                   placeholder="Enter message here..."
                   required
-                  className="resize-none w-full h-[272px] p-4 rounded-b-[10px]"
+                  className="resize-none w-full h-[150px] p-4 rounded-b-[10px]"
                 ></textarea>
 
                 {/* Display character and page count */}
@@ -291,18 +299,61 @@ const PersonalisedMessage = () => {
               </div>
             </div>
 
-            {/* Display Message */}
-            <div className="w-full md:w-[30rem]">
-              <div className="bg-white p-4 rounded-[10px] h-full">
-                <div className="bg-[#D9D9D9] text-black p-4 rounded-[10px]">
-                  {formattedMessage}
+            <div className="w-full md:w-[40rem]">
+              {/* delivery gateway */}
+              <div>
+                <p className="text-sm">
+                  Choose a Delivery Route/Gateway (Required)
+                </p>
+                <div className="border-[3px] border-[#8292ff] p-2 bg-[#8292ff6b] text-xs max-w-[580px]">
+                  <label htmlFor="" className="flex gap-2">
+                    <input
+                      type="radio"
+                      name="delivery_route"
+                      checked={bulkSmsData?.delivery_route === "2"}
+                      onChange={() => handleRouteChange("2")}
+                      className=" w-5 rounded aspect-square cursor-pointer"
+                    />
+                    <div className="">
+                      <p className="text-xs font-medium">
+                        Direct-Refund Route: Get A Refund for MTN DND Numbers
+                      </p>
+                      <p className="text-xs">
+                        {" "}
+                        Delivers to ONLY non-DND numbers & Get a ₦3/page refund
+                        for MTN DND numbers.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="border-[3px] border-[#d9d9d9] p-2 bg-[#d9d9d9] text-xs mt-4 max-w-[580px]">
+                  <label htmlFor="" className="flex gap-2">
+                    <input
+                      type="radio"
+                      name="delivery_route"
+                      checked={bulkSmsData?.delivery_route === "4"}
+                      onChange={() => handleRouteChange("4")}
+                      className=" w-5 rounded aspect-square"
+                    />
+                    <div className="">
+                      <p className="text-xs font-medium">
+                        Direct-Corporate Route: Auto-resend to MTN DND Number
+                        via the Corporate Route
+                      </p>
+                      <p className="text-xs">
+                        Delivers to non-DND and MTN DND Numbers. MTN numbers
+                        will cost ₦4.99/pg
+                      </p>
+                    </div>
+                  </label>
                 </div>
               </div>
             </div>
           </div>
 
           {/* message type */}
-          <div>
+          {/* <div>
             <label htmlFor="">Message Type</label>
             <Select
               placeholder="Select message type"
@@ -312,133 +363,88 @@ const PersonalisedMessage = () => {
               _focus={{ borderColor: "#fc1e65", boxShadow: "none" }}
               required
             >
-              {/* <option value="0">Flash Text</option> */}
+              <option value="0">Flash Text</option>
               <option value="1">Flash Plain Text</option>
               <option value="2">Unicode SMS</option>
               <option value="6">Unicode Flash SMS</option>
             </Select>
-          </div>
+          </div> */}
 
-          {/* delivery gateway */}
-          <div>
-            <p> Choose a Delivery Route/Gateway (Required)</p>
-            <div className="border-[3px] border-[#8292ff] p-2 bg-[#8292ff6b] text-xs max-w-[580px]">
-              <label htmlFor="" className="flex gap-2">
-                <input
-                  type="radio"
-                  name="delivery_route"
-                  checked={bulkSmsData?.delivery_route === "2"}
-                  onChange={() => handleRouteChange("2")}
-                  className=" w-5 rounded aspect-square"
-                />
-                <div className="flex flex-col gap-2">
-                  <p className="font-medium">
-                    Direct-Refund Route: Get A Refund for MTN DND Numbers
-                  </p>
-                  <p>
-                    {" "}
-                    Delivers to ONLY non-DND numbers & Get a ₦3/page refund for
-                    MTN DND numbers.
-                  </p>
-                </div>
-              </label>
+          <div className="flex justify-between">
+            {/* schedule message */}
+            <div>
+              <div>
+                <button
+                  type="button"
+                  className=" text-white bg-pinks text-sm md:text-lg font-bold rounded-[10px] p-4 mt-1"
+                  onClick={() =>
+                    setBulkSmsData((prevData) => ({
+                      ...prevData,
+                      scheduled: !prevData.scheduled, // Toggle the state
+                    }))
+                  }
+                >
+                  Schedule
+                </button>
+              </div>
+              {bulkSmsData.scheduled && (
+                <>
+                  <div>
+                    <label mt={10} as="h5" size="sm" fontFamily={"inherit"}>
+                      Select Date and Time
+                    </label>
+                    <input
+                      placeholder="Select Date and Time"
+                      size="md"
+                      name="date_time"
+                      onChange={scheduleInputChange}
+                      type="datetime-local"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label mt={5} as="h5" size="sm" fontFamily={"inherit"}>
+                      Schedule type
+                    </label>
+                    <select
+                      placeholder="Select"
+                      name="schedule_type"
+                      onChange={scheduleInputChange}
+                      required
+                    >
+                      <option>Daily</option>
+                      <option>Weekly</option>
+                      <option>Monthly</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>Number of time schedule should occur</label>
+                    <select
+                      placeholder="Select"
+                      name="schedule_number"
+                      onChange={scheduleInputChange}
+                      required
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
 
-            <div className="border-[3px] border-[#d9d9d9] p-2 bg-[#d9d9d9] text-xs mt-4 max-w-[580px]">
-              <label htmlFor="" className="flex gap-2">
-                <input
-                  type="radio"
-                  name="delivery_route"
-                  checked={bulkSmsData?.delivery_route === "3"}
-                  onChange={() => handleRouteChange("3")}
-                  className=" w-5 rounded aspect-square"
-                />
-                <div className="flex flex-col gap-2">
-                  <p className="font-medium">
-                    Direct-Corporate Route: Auto-resend to MTN DND Number via
-                    the Corporate Route
-                  </p>
-                  <p>
-                    {" "}
-                    Delivers to non-DND and MTN DND Numbers. MTN numbers will
-                    cost ₦4.99/pg
-                  </p>
-                </div>
-              </label>
+            {/* buttons */}
+            <div>
+              <button
+                type="button"
+                className="border border-black/25 rounded-[10px] p-4 cursor-pointer bg-pinks text-white text-sm md:text-lg w-fit"
+                onClick={openModal}
+              >
+                Proceed to analysis
+              </button>
             </div>
-          </div>
-
-          {/* schedule message */}
-          <div>
-            <button
-              type="button"
-              className=" text-white bg-pinks text-[24px] font-bold rounded-[10px] py-2 px-6 mt-1"
-              onClick={() =>
-                setBulkSmsData((prevData) => ({
-                  ...prevData,
-                  scheduled: !prevData.scheduled, // Toggle the state
-                }))
-              }
-            >
-              Schedule
-            </button>
-          </div>
-          {bulkSmsData.scheduled && (
-            <>
-              <div>
-                <label mt={10} as="h5" size="sm" fontFamily={"inherit"}>
-                  Select Date and Time
-                </label>
-                <input
-                  placeholder="Select Date and Time"
-                  size="md"
-                  name="date_time"
-                  onChange={scheduleInputChange}
-                  type="datetime-local"
-                  required
-                />
-              </div>
-              <div>
-                <label mt={5} as="h5" size="sm" fontFamily={"inherit"}>
-                  Schedule type
-                </label>
-                <select
-                  placeholder="Select"
-                  name="schedule_type"
-                  onChange={scheduleInputChange}
-                  required
-                >
-                  <option>Daily</option>
-                  <option>Weekly</option>
-                  <option>Monthly</option>
-                </select>
-              </div>
-              <div>
-                <label>Number of time schedule should occur</label>
-                <select
-                  placeholder="Select"
-                  name="schedule_number"
-                  onChange={scheduleInputChange}
-                  required
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                </select>
-              </div>
-            </>
-          )}
-
-          {/* buttons */}
-          <div>
-            <button
-              type="button"
-              className="border border-black/25 rounded-[10px] p-4 cursor-pointer bg-pinks text-white text-lg w-full md:w-[653px]"
-              onClick={openModal}
-            >
-              Proceed to analysis
-            </button>
           </div>
         </form>
 
@@ -449,7 +455,7 @@ const PersonalisedMessage = () => {
           loading={Loading}
           smsData={bulkSmsData}
           fetchEstimate={fetchEstimate}
-          isPersonalised={true}
+          isPersonalised={false}
         />
       </div>
     </div>

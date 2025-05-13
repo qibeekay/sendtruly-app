@@ -144,9 +144,6 @@ export const GetDeliveryReport = async () => {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    //console.log(response);
-    console.log("e kaaro", bearer);
-
     if (!response.data.status) {
       return {
         success: false,
@@ -181,9 +178,6 @@ export const GetSingleReport = async (userdata) => {
         },
       }
     );
-
-    //console.log(response.data.status);
-    console.log("e kaaro", bearer);
 
     if (!response.data.status) {
       return {

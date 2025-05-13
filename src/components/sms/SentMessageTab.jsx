@@ -15,7 +15,7 @@ const SentMessageTab = () => {
   const [reports, setReports] = useState([]);
   const [showDeliveryReport, setShowDeliveryReport] = useState(false);
 
-  // Pagination state
+  // Pagination statessss
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Number of items per page
 
@@ -56,6 +56,7 @@ const SentMessageTab = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentRanges = ranges.slice(indexOfFirstItem, indexOfLastItem);
   const currentReports = reports.slice(indexOfFirstItem, indexOfLastItem);
+  console.log(currentRanges);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -156,9 +157,6 @@ const SentMessageTab = () => {
                   <thead>
                     <tr className="bg-gray-50">
                       <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
-                        ID
-                      </th>
-                      <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
                         Sender ID
                       </th>
                       <th className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">
@@ -205,11 +203,8 @@ const SentMessageTab = () => {
                           key={index}
                           className="transition-all duration-500 odd:bg-[#F7F5EC] even:bg-white"
                         >
-                          <td className="p-5 text-sm leading-6 font-medium text-gray-900">
-                            {report?.message_id}
-                          </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            Evans
+                            {report?.sender_id}
                           </td>
                           <td className="p-5 text-sm leading-6 font-medium text-gray-900">
                             {report?.message}
@@ -220,7 +215,7 @@ const SentMessageTab = () => {
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {report?.recipients}
                           </td>
-                          <td className="p-5 text-sm leading-6 font-medium text-gray-900">
+                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {formatDate(report?.sent_time)}
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
