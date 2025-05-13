@@ -25,7 +25,7 @@ const PersonalisedMessage = () => {
     contact_numbers: [],
     message_type: "1",
     is_drafted: false,
-    delivery_route: "3",
+    delivery_route: "4",
     scheduled: false,
     scheduled_data: { schedule_type: "Daily", scheduled_number: "1" },
     sms_cost: 0,
