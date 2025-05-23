@@ -41,9 +41,9 @@ const Enterprise = () => {
       const result = await GetUserInfo(userData?.user?.usertoken);
       setData(result?.data?.data);
 
-      if (shouldShowPlanModal(result?.data?.data)) {
-        setShowPlanModal(true);
-      }
+      // if (shouldShowPlanModal(result?.data?.data)) {
+      //   setShowPlanModal(true);
+      // }
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -109,14 +109,11 @@ const Enterprise = () => {
         </div>
       )}
 
-      {/* Only show content if user has proper plan and payment status */}
-      {!showPlanModal && (
-        <>
-          <Marketing />
-          <Addlinks />
-          <ReviewHistory />
-        </>
-      )}
+      <>
+        <Marketing />
+        <Addlinks />
+        <ReviewHistory />
+      </>
     </DashboardLayout>
   );
 };

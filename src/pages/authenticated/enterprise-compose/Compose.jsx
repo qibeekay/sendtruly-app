@@ -38,10 +38,6 @@ const Compose = () => {
     try {
       const result = await GetUserInfo(userData?.user?.usertoken);
       setData(result?.data?.data);
-
-      if (shouldShowPlanModal(result?.data?.data)) {
-        setShowPlanModal(true);
-      }
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -52,6 +48,7 @@ const Compose = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
+
   return (
     <DashboardLayout pageName={"Compose"}>
       <PageLoader isLoading={isLoading} />
@@ -59,7 +56,6 @@ const Compose = () => {
       {/* Inline Modal Implementation */}
       {showPlanModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          {/* Modal container */}
           <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
@@ -101,15 +97,24 @@ const Compose = () => {
               >
                 Dashboard
               </button>
+              <button
+                type="button"
+                onClick={() => setShowPlanModal(false)}
+                className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       )}
-      {!showPlanModal && (
-        <>
-          <EnterpriseCompose />
-        </>
-      )}
+      {/* {!showPlanModal && ( */}
+      <EnterpriseCompose
+        userData={userData}
+        shouldShowPlanModal={shouldShowPlanModal}
+        setShowPlanModal={setShowPlanModal}
+      />
+      {/* )} */}
     </DashboardLayout>
   );
 };

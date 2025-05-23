@@ -6,7 +6,11 @@ import { GetReviewLinks, SendReviewSms } from "../../../api/reviews";
 import { GetPaymentLinks, SendPaymentSms } from "../../../api/text2pay";
 import { useNavigate } from "react-router-dom";
 
-const EnterpriseCompose = () => {
+const EnterpriseCompose = ({
+  userData,
+  shouldShowPlanModal,
+  setShowPlanModal,
+}) => {
   const [groups, setGroups] = useState([]);
   const [links, setLinks] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -14,7 +18,6 @@ const EnterpriseCompose = () => {
   const [Loading, setLoading] = useState(false);
   const [selectedListTokens, setSelectedListTokens] = useState("");
   const [showNoContactsModal, setShowNoContactsModal] = useState(false);
-  const userData = JSON.parse(localStorage.getItem("data_user_main"));
   const navigate = useNavigate();
 
   // Handles tabs
@@ -149,6 +152,12 @@ const EnterpriseCompose = () => {
   // Function to send SMS based on selected link or invoice
   const sendSms = async (e) => {
     e.preventDefault();
+
+    // Check if user should see the plan modal
+    if (shouldShowPlanModal(userData)) {
+      setShowPlanModal(true);
+      return;
+    }
 
     // Check if user has any contact lists
     if (groups.length === 0) {
